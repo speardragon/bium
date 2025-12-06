@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #F9FAFB;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* Queue water level animation */
+@keyframes fillWater {
+  from {
+    height: 0%;
+  }
+  to {
+    height: var(--fill-level);
+  }
+}
+
+.water-fill {
+  animation: fillWater 0.5s ease-out forwards;
+}
+
+/* Buffer pattern */
+.buffer-pattern {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 5px,
+    rgba(156, 163, 175, 0.2) 5px,
+    rgba(156, 163, 175, 0.2) 10px
+  );
+}
+
+/* Drag overlay styles */
+.dragging {
+  opacity: 0.8;
+  transform: scale(1.02);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Queue drop target highlight */
+.drop-target-active {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+  background-color: rgba(59, 130, 246, 0.05);
+}
+
+/* Overflow warning animation */
+@keyframes overflowPulse {
+  0%, 100% {
+    border-color: #EF4444;
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+  50% {
+    border-color: #DC2626;
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0);
+  }
+}
+
+.overflow-warning {
+  animation: overflowPulse 1s ease-in-out infinite;
+}
