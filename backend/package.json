@@ -1,8 +1,8 @@
 {
-  "name": "meq-backend",
+  "name": "bium-backend",
   "version": "1.0.0",
   "type": "module",
-  "description": "My Empty Queue Backend API",
+  "description": "비움 (bium) Backend API",
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",

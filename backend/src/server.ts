@@ -241,5 +241,5 @@ app.get('/api/health', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`MEQ Backend running on http://localhost:${PORT}`);
+  console.log(`비움 (bium) Backend running on http://localhost:${PORT}`);
 });

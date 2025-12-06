@@ -1,4 +1,4 @@
-// Type definitions for MEQ
+// Type definitions for 비움 (bium)
 
 export interface Queue {
   id: string;

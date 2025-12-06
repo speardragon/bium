@@ -17,7 +17,7 @@ export function Header() {
           </svg>
         </div>
         <h1 className="text-lg font-bold text-gray-800">
-          My Empty Queue (MEQ)
+          비움 (bium)
         </h1>
       </div>
       <div className="flex items-center gap-4">

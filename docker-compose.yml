@@ -8,7 +8,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: meq-backend
+    container_name: bium-backend
     restart: always
     ports:
       - "3000:3000"
@@ -26,7 +26,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: meq-frontend
+    container_name: bium-frontend
     restart: always
     ports:
       - "80:80"

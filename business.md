@@ -1,4 +1,4 @@
-# [기획서] Project Name: My Empty Queue (MEQ) - 가칭
+# [기획서] Project Name: 비움 (bium)
 
 ## 1. 개요 (Overview)
 
