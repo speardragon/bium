@@ -13,9 +13,6 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY package*.json ./
 
-# Create data directory for Lowdb
-RUN mkdir -p data
-
 EXPOSE 3000
 
 CMD ["npm", "start"]

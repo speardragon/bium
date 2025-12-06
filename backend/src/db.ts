@@ -2,9 +2,18 @@ import { Low } from 'lowdb';
 import { JSONFile } from 'lowdb/node';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { existsSync, mkdirSync } from 'fs';
 import { Database } from './types.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+
+// Data path: 환경변수 DATA_PATH 또는 기본값 (프로젝트 내 data 폴더)
+const DATA_PATH = process.env.DATA_PATH || join(__dirname, '..', 'data');
+
+// 데이터 디렉토리가 없으면 생성
+if (!existsSync(DATA_PATH)) {
+  mkdirSync(DATA_PATH, { recursive: true });
+}
 
 // Default data
 const defaultData: Database = {
@@ -99,7 +108,8 @@ const defaultData: Database = {
 };
 
 // Database file path
-const file = join(__dirname, '..', 'data', 'db.json');
+const file = join(DATA_PATH, 'db.json');
+console.log(`Data path: ${file}`);
 
 // Configure lowdb
 const adapter = new JSONFile<Database>(file);

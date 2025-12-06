@@ -34,3 +34,6 @@ coverage/
 
 # TypeScript cache
 *.tsbuildinfo
+
+# Local data
+backend/data/
