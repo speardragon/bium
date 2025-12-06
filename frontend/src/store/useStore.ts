@@ -1,6 +1,7 @@
 import { create } from 'zustand';
-import { Queue, Task, WeeklyPlan } from '../types';
+import { Queue, Task, WeeklyPlan, SupportedLanguage, Settings } from '../types';
 import { getCurrentWeekKey } from '../utils';
+import i18n from '../i18n';
 
 const API_URL = '/api';
 
@@ -10,6 +11,7 @@ interface AppState {
   tasks: Task[];
   weeklyPlan: WeeklyPlan;
   currentWeekKey: string;
+  settings: Settings;
   
   // Loading states
   isLoading: boolean;
@@ -19,6 +21,7 @@ interface AppState {
   fetchQueues: () => Promise<void>;
   fetchTasks: () => Promise<void>;
   fetchWeeklyPlan: () => Promise<void>;
+  fetchSettings: () => Promise<void>;
   
   addTask: (title: string, durationMinutes: number) => Promise<void>;
   deleteTask: (taskId: string) => Promise<void>;
@@ -29,6 +32,8 @@ interface AppState {
   
   addQueue: (queue: Omit<Queue, 'id'>) => Promise<void>;
   deleteQueue: (queueId: string) => Promise<void>;
+  
+  setLanguage: (language: SupportedLanguage) => Promise<void>;
 }
 
 export const useStore = create<AppState>((set, get) => ({
@@ -37,6 +42,7 @@ export const useStore = create<AppState>((set, get) => ({
   tasks: [],
   weeklyPlan: {},
   currentWeekKey: getCurrentWeekKey(),
+  settings: { language: 'en' },
   isLoading: false,
   error: null,
   
@@ -70,6 +76,21 @@ export const useStore = create<AppState>((set, get) => ({
       set({ weeklyPlan });
     } catch (error) {
       set({ error: 'Failed to fetch weekly plan' });
+    }
+  },
+  
+  // Fetch settings
+  fetchSettings: async () => {
+    try {
+      const res = await fetch(`${API_URL}/settings`);
+      const settings = await res.json();
+      set({ settings });
+      // Sync i18n with fetched settings
+      if (settings.language && i18n.language !== settings.language) {
+        i18n.changeLanguage(settings.language);
+      }
+    } catch (error) {
+      set({ error: 'Failed to fetch settings' });
     }
   },
   
@@ -192,6 +213,23 @@ export const useStore = create<AppState>((set, get) => ({
       }));
     } catch (error) {
       set({ error: 'Failed to delete queue' });
+    }
+  },
+  
+  // Set language
+  setLanguage: async (language: SupportedLanguage) => {
+    try {
+      const res = await fetch(`${API_URL}/settings`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ language })
+      });
+      const settings = await res.json();
+      set({ settings });
+      // Update i18n
+      i18n.changeLanguage(language);
+    } catch (error) {
+      set({ error: 'Failed to update language' });
     }
   }
 }));

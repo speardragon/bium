@@ -1,0 +1,40 @@
+{
+  "app": {
+    "title": "bium"
+  },
+  "header": {
+    "language": "Language"
+  },
+  "inbox": {
+    "title": "Inbox",
+    "addTask": "Add a new task...",
+    "timeEstimation": "Required time estimation",
+    "noTasks": "No tasks in inbox",
+    "noTasksHint": "Add a task above to get started"
+  },
+  "weeklyPlan": {
+    "title": "Weekly Plan View",
+    "emptyAllQueues": "Empty All Queues",
+    "noQueues": "No queues"
+  },
+  "queue": {
+    "capacity": "Capacity",
+    "buffer": "Buffer",
+    "overCapacity": "OVER Capacity!"
+  },
+  "common": {
+    "monday": "Mon",
+    "tuesday": "Tue",
+    "wednesday": "Wed",
+    "thursday": "Thu",
+    "friday": "Fri",
+    "saturday": "Sat",
+    "sunday": "Sun"
+  },
+  "language": {
+    "ko": "한국어",
+    "en": "English",
+    "ja": "日本語",
+    "zh": "中文"
+  }
+}

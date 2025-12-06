@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
+import { useTranslation } from "react-i18next";
 import { Task } from "../types";
 import { formatDuration } from "../utils";
 import { useStore } from "../store/useStore";
@@ -48,6 +49,7 @@ export function TaskCard({ task, isDragging }: TaskCardProps) {
 interface InboxProps {}
 
 export function Inbox({}: InboxProps) {
+  const { t } = useTranslation();
   const { tasks, addTask } = useStore();
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [newTaskDuration, setNewTaskDuration] = useState(30);
@@ -67,7 +69,7 @@ export function Inbox({}: InboxProps) {
     <div className="w-64 bg-white border-r border-gray-200 flex flex-col h-full">
       {/* Header */}
       <div className="p-4 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-800">Inbox</h2>
+        <h2 className="text-lg font-semibold text-gray-800">{t("inbox.title")}</h2>
       </div>
 
       {/* Add Task Form */}
@@ -75,7 +77,7 @@ export function Inbox({}: InboxProps) {
         <div className="flex items-center gap-2 mb-2">
           <input
             type="text"
-            placeholder="Add a new task..."
+            placeholder={t("inbox.addTask")}
             value={newTaskTitle}
             onChange={(e) => setNewTaskTitle(e.target.value)}
             className="flex-1 px-3 py-2 text-sm border border-gray-200 rounded-lg
@@ -112,7 +114,7 @@ export function Inbox({}: InboxProps) {
               clipRule="evenodd"
             />
           </svg>
-          <span>Required time estimation</span>
+          <span>{t("inbox.timeEstimation")}</span>
         </div>
         <div className="mt-2 flex items-center gap-2">
           <input
@@ -134,8 +136,8 @@ export function Inbox({}: InboxProps) {
       <div className="flex-1 overflow-y-auto p-4">
         {inboxTasks.length === 0 ? (
           <div className="text-center text-gray-400 text-sm py-8">
-            <p>No tasks in inbox</p>
-            <p className="text-xs mt-1">Add a task above to get started</p>
+            <p>{t("inbox.noTasks")}</p>
+            <p className="text-xs mt-1">{t("inbox.noTasksHint")}</p>
           </div>
         ) : (
           inboxTasks.map((task) => <TaskCard key={task.id} task={task} />)

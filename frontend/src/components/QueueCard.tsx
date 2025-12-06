@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDroppable } from '@dnd-kit/core';
+import { useTranslation } from 'react-i18next';
 import { Queue, Task } from '../types';
 import { calculateDuration, formatDuration, calculateFillPercentage, getFillStatus, getFillColor } from '../utils';
 import { useStore } from '../store/useStore';
@@ -11,6 +12,7 @@ interface QueueCardProps {
 }
 
 export function QueueCard({ queue, date, tasks }: QueueCardProps) {
+  const { t } = useTranslation();
   const { unassignTask } = useStore();
   const { isOver, setNodeRef } = useDroppable({
     id: `${queue.id}-${date}`,
@@ -128,14 +130,14 @@ export function QueueCard({ queue, date, tasks }: QueueCardProps) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
             <span className="text-xs">{queue.title}</span>
-            <span className="text-xs">({formatDuration(totalMinutes)} Capacity)</span>
+            <span className="text-xs">({formatDuration(totalMinutes)} {t("queue.capacity")})</span>
           </div>
         )}
 
         {/* Buffer indicator */}
         {bufferMinutes > 0 && tasks.length > 0 && (
           <div className="mt-2 px-2 py-1 rounded bg-gray-50 border border-dashed border-gray-300 text-xs text-gray-500 text-center">
-            Buffer ({formatDuration(bufferMinutes)})
+            {t("queue.buffer")} ({formatDuration(bufferMinutes)})
           </div>
         )}
       </div>
@@ -146,7 +148,7 @@ export function QueueCard({ queue, date, tasks }: QueueCardProps) {
           <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
             <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
           </svg>
-          OVER Capacity! (-{formatDuration(usedMinutes - totalMinutes)})
+          {t("queue.overCapacity")} (-{formatDuration(usedMinutes - totalMinutes)})
         </div>
       )}
     </div>

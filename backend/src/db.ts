@@ -1,14 +1,28 @@
-import { Low } from 'lowdb';
-import { JSONFile } from 'lowdb/node';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
-import { existsSync, mkdirSync } from 'fs';
-import { Database } from './types.js';
+import { Low } from "lowdb";
+import { JSONFile } from "lowdb/node";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
+import { existsSync, mkdirSync } from "fs";
+import { homedir } from "os";
+import { Database } from "./types.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+// Resolve ~ to home directory
+function resolvePath(path: string): string {
+  if (path.startsWith("~/")) {
+    return join(homedir(), path.slice(2));
+  }
+  if (path === "~") {
+    return homedir();
+  }
+  return path;
+}
+
 // Data path: 환경변수 DATA_PATH 또는 기본값 (프로젝트 내 data 폴더)
-const DATA_PATH = process.env.DATA_PATH || join(__dirname, '..', 'data');
+const DATA_PATH = process.env.DATA_PATH 
+  ? resolvePath(process.env.DATA_PATH)
+  : join(__dirname, "..", "data");
 
 // 데이터 디렉토리가 없으면 생성
 if (!existsSync(DATA_PATH)) {
@@ -19,96 +33,99 @@ if (!existsSync(DATA_PATH)) {
 const defaultData: Database = {
   queues: [
     {
-      id: 'q_001',
+      id: "q_001",
       dayOfWeek: 1, // Monday
-      startTime: '09:00',
-      endTime: '11:00',
-      title: 'Deep Work',
-      color: '#3B82F6'
+      startTime: "09:00",
+      endTime: "11:00",
+      title: "Deep Work",
+      color: "#3B82F6",
     },
     {
-      id: 'q_002',
+      id: "q_002",
       dayOfWeek: 1,
-      startTime: '13:00',
-      endTime: '15:00',
-      title: '1-3 PM',
-      color: '#10B981'
+      startTime: "13:00",
+      endTime: "15:00",
+      title: "1-3 PM",
+      color: "#10B981",
     },
     {
-      id: 'q_003',
+      id: "q_003",
       dayOfWeek: 2,
-      startTime: '14:00',
-      endTime: '16:00',
-      title: 'Urgent Report',
-      color: '#EF4444'
+      startTime: "14:00",
+      endTime: "16:00",
+      title: "Urgent Report",
+      color: "#EF4444",
     },
     {
-      id: 'q_004',
+      id: "q_004",
       dayOfWeek: 3,
-      startTime: '09:00',
-      endTime: '11:00',
-      title: 'Deep Work Queue',
-      color: '#3B82F6'
+      startTime: "09:00",
+      endTime: "11:00",
+      title: "Deep Work Queue",
+      color: "#3B82F6",
     },
     {
-      id: 'q_005',
+      id: "q_005",
       dayOfWeek: 4,
-      startTime: '09:00',
-      endTime: '11:00',
-      title: 'Admin Queue',
-      color: '#6B7280'
+      startTime: "09:00",
+      endTime: "11:00",
+      title: "Admin Queue",
+      color: "#6B7280",
     },
     {
-      id: 'q_006',
+      id: "q_006",
       dayOfWeek: 5,
-      startTime: '09:00',
-      endTime: '11:00',
-      title: '9-11 AM',
-      color: '#10B981'
-    }
+      startTime: "09:00",
+      endTime: "11:00",
+      title: "9-11 AM",
+      color: "#10B981",
+    },
   ],
   tasks: [
     {
-      id: 't_001',
-      title: 'Write Blog Post',
+      id: "t_001",
+      title: "Write Blog Post",
       durationMinutes: 60,
-      status: 'inbox',
-      assignedTo: null
+      status: "inbox",
+      assignedTo: null,
     },
     {
-      id: 't_002',
-      title: 'Prepare Presentation',
+      id: "t_002",
+      title: "Prepare Presentation",
       durationMinutes: 90,
-      status: 'inbox',
-      assignedTo: null
+      status: "inbox",
+      assignedTo: null,
     },
     {
-      id: 't_003',
-      title: 'Client Meeting Prep',
+      id: "t_003",
+      title: "Client Meeting Prep",
       durationMinutes: 45,
-      status: 'inbox',
-      assignedTo: null
+      status: "inbox",
+      assignedTo: null,
     },
     {
-      id: 't_004',
-      title: 'Review Code',
+      id: "t_004",
+      title: "Review Code",
       durationMinutes: 30,
-      status: 'inbox',
-      assignedTo: null
+      status: "inbox",
+      assignedTo: null,
     },
     {
-      id: 't_005',
-      title: 'Email Cleanup',
+      id: "t_005",
+      title: "Email Cleanup",
       durationMinutes: 30,
-      status: 'inbox',
-      assignedTo: null
-    }
+      status: "inbox",
+      assignedTo: null,
+    },
   ],
-  weeklyPlan: {}
+  weeklyPlan: {},
+  settings: {
+    language: "en",
+  },
 };
 
 // Database file path
-const file = join(DATA_PATH, 'db.json');
+const file = join(DATA_PATH, "db.json");
 console.log(`Data path: ${file}`);
 
 // Configure lowdb

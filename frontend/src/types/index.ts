@@ -27,3 +27,9 @@ export interface WeeklyPlanEntry {
 export interface WeeklyPlan {
   [weekKey: string]: WeeklyPlanEntry[];
 }
+
+export type SupportedLanguage = 'ko' | 'en' | 'ja' | 'zh';
+
+export interface Settings {
+  language: SupportedLanguage;
+}

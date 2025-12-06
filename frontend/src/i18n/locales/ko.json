@@ -1,0 +1,40 @@
+{
+  "app": {
+    "title": "비움 (bium)"
+  },
+  "header": {
+    "language": "언어"
+  },
+  "inbox": {
+    "title": "인박스",
+    "addTask": "새 작업 추가...",
+    "timeEstimation": "예상 소요 시간",
+    "noTasks": "인박스가 비어있습니다",
+    "noTasksHint": "위에서 작업을 추가하세요"
+  },
+  "weeklyPlan": {
+    "title": "주간 계획 보기",
+    "emptyAllQueues": "모든 큐 비우기",
+    "noQueues": "큐 없음"
+  },
+  "queue": {
+    "capacity": "용량",
+    "buffer": "버퍼",
+    "overCapacity": "초과!"
+  },
+  "common": {
+    "monday": "월",
+    "tuesday": "화",
+    "wednesday": "수",
+    "thursday": "목",
+    "friday": "금",
+    "saturday": "토",
+    "sunday": "일"
+  },
+  "language": {
+    "ko": "한국어",
+    "en": "English",
+    "ja": "日本語",
+    "zh": "中文"
+  }
+}

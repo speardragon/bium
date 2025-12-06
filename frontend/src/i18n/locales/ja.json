@@ -1,0 +1,40 @@
+{
+  "app": {
+    "title": "ビウム (bium)"
+  },
+  "header": {
+    "language": "言語"
+  },
+  "inbox": {
+    "title": "インボックス",
+    "addTask": "新しいタスクを追加...",
+    "timeEstimation": "予定所要時間",
+    "noTasks": "インボックスにタスクがありません",
+    "noTasksHint": "上記からタスクを追加してください"
+  },
+  "weeklyPlan": {
+    "title": "週間計画ビュー",
+    "emptyAllQueues": "すべてのキューを空にする",
+    "noQueues": "キューなし"
+  },
+  "queue": {
+    "capacity": "容量",
+    "buffer": "バッファ",
+    "overCapacity": "容量超過!"
+  },
+  "common": {
+    "monday": "月",
+    "tuesday": "火",
+    "wednesday": "水",
+    "thursday": "木",
+    "friday": "金",
+    "saturday": "土",
+    "sunday": "日"
+  },
+  "language": {
+    "ko": "한국어",
+    "en": "English",
+    "ja": "日本語",
+    "zh": "中文"
+  }
+}

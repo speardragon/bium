@@ -1,10 +1,23 @@
+import { useTranslation } from "react-i18next";
 import { useStore } from "../store/useStore";
 import { QueueCard } from "./QueueCard";
 import { getWeekDates } from "../utils";
 
 export function WeeklyPlanView() {
+  const { t } = useTranslation();
   const { queues, tasks, emptyAllQueues } = useStore();
   const weekDates = getWeekDates();
+
+  // Map day names to translation keys
+  const dayNameKeys: { [key: string]: string } = {
+    Mon: "common.monday",
+    Tue: "common.tuesday",
+    Wed: "common.wednesday",
+    Thu: "common.thursday",
+    Fri: "common.friday",
+    Sat: "common.saturday",
+    Sun: "common.sunday",
+  };
 
   // Get tasks assigned to a specific queue on a specific date
   const getQueueTasks = (queueId: string, date: string) => {
@@ -25,7 +38,7 @@ export function WeeklyPlanView() {
     <div className="flex-1 flex flex-col h-full overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white">
-        <h1 className="text-xl font-bold text-gray-800">Weekly Plan View</h1>
+        <h1 className="text-xl font-bold text-gray-800">{t("weeklyPlan.title")}</h1>
         <button
           onClick={emptyAllQueues}
           className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 
@@ -43,7 +56,7 @@ export function WeeklyPlanView() {
               clipRule="evenodd"
             />
           </svg>
-          Empty All Queues
+          {t("weeklyPlan.emptyAllQueues")}
         </button>
       </div>
 
@@ -52,13 +65,14 @@ export function WeeklyPlanView() {
         <div className="grid grid-cols-5 gap-4 min-w-[800px]">
           {weekDates.map(({ date, dayOfWeek, dayName }) => {
             const dayQueues = getQueuesForDay(dayOfWeek);
+            const translatedDayName = t(dayNameKeys[dayName] || dayName);
 
             return (
               <div key={date} className="flex flex-col">
                 {/* Day Header */}
                 <div className="text-center py-2 mb-3 border-b-2 border-gray-200">
                   <span className="text-sm font-bold text-gray-700">
-                    {dayName}
+                    {translatedDayName}
                   </span>
                 </div>
 
@@ -66,7 +80,7 @@ export function WeeklyPlanView() {
                 <div className="space-y-3">
                   {dayQueues.length === 0 ? (
                     <div className="p-4 text-center text-gray-400 text-sm border-2 border-dashed border-gray-200 rounded-lg">
-                      No queues
+                      {t("weeklyPlan.noQueues")}
                     </div>
                   ) : (
                     dayQueues.map((queue) => (

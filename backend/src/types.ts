@@ -30,8 +30,15 @@ export interface WeeklyPlan {
   [weekKey: string]: WeeklyPlanEntry[];
 }
 
+export type SupportedLanguage = 'ko' | 'en' | 'ja' | 'zh';
+
+export interface Settings {
+  language: SupportedLanguage;
+}
+
 export interface Database {
   queues: Queue[];
   tasks: Task[];
   weeklyPlan: WeeklyPlan;
+  settings: Settings;
 }
