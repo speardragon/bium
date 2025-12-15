@@ -161,6 +161,38 @@ export async function initDb(): Promise<Low<Database>> {
   if (!db.data) {
     db.data = defaultData;
     await db.write();
+  } else {
+    // Ensure all required arrays exist (for partial/corrupted data)
+    let needsWrite = false;
+    
+    if (!Array.isArray(db.data.queues)) {
+      db.data.queues = defaultData.queues;
+      needsWrite = true;
+    }
+    if (!Array.isArray(db.data.queueTemplates)) {
+      db.data.queueTemplates = defaultData.queueTemplates;
+      needsWrite = true;
+    }
+    if (!Array.isArray(db.data.tasks)) {
+      db.data.tasks = defaultData.tasks;
+      needsWrite = true;
+    }
+    if (!db.data.settings) {
+      db.data.settings = defaultData.settings;
+      needsWrite = true;
+    }
+    
+    // Ensure each queue has a tasks array
+    db.data.queues.forEach((queue) => {
+      if (!Array.isArray(queue.tasks)) {
+        queue.tasks = [];
+        needsWrite = true;
+      }
+    });
+    
+    if (needsWrite) {
+      await db.write();
+    }
   }
   return db;
 }

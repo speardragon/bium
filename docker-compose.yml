@@ -11,7 +11,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - bium-data:/app/data
+      - ~/.bium/data:/app/data
     environment:
       - NODE_ENV=production
       - PORT=3000

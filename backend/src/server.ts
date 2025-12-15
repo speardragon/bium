@@ -25,6 +25,8 @@ app.get("/api/queues", (req, res) => {
 app.post("/api/queues", async (req, res) => {
   const { title, color } = req.body;
 
+  if (!db.data) return res.status(500).json({ error: "Database error" });
+
   const newQueue: Queue = {
     id: `q_${uuidv4().slice(0, 8)}`,
     title,
@@ -32,7 +34,7 @@ app.post("/api/queues", async (req, res) => {
     tasks: [],
   };
 
-  db.data?.queues.push(newQueue);
+  db.data.queues.push(newQueue);
   await db.write();
 
   res.status(201).json(newQueue);
@@ -103,6 +105,11 @@ app.post("/api/queues/:id/assign", async (req, res) => {
         (t) => t !== taskId
       );
     }
+  }
+
+  // Ensure tasks array exists
+  if (!Array.isArray(db.data.queues[queueIndex].tasks)) {
+    db.data.queues[queueIndex].tasks = [];
   }
 
   // Add to new queue
@@ -178,6 +185,11 @@ app.post("/api/queue-templates", async (req, res) => {
     endTime,
   };
 
+  // Ensure queueTemplates array exists
+  if (!Array.isArray(db.data.queueTemplates)) {
+    db.data.queueTemplates = [];
+  }
+
   db.data.queueTemplates.push(newTemplate);
   await db.write();
 
@@ -232,6 +244,8 @@ app.get("/api/tasks/inbox", (req, res) => {
 app.post("/api/tasks", async (req, res) => {
   const { title, durationMinutes } = req.body;
 
+  if (!db.data) return res.status(500).json({ error: "Database error" });
+
   const newTask: Task = {
     id: `t_${uuidv4().slice(0, 8)}`,
     title,
@@ -241,7 +255,7 @@ app.post("/api/tasks", async (req, res) => {
     completedAt: null,
   };
 
-  db.data?.tasks.push(newTask);
+  db.data.tasks.push(newTask);
   await db.write();
 
   res.status(201).json(newTask);
