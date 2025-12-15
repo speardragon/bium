@@ -5,12 +5,27 @@
   "header": {
     "language": "Language"
   },
+  "sidebar": {
+    "inbox": "Inbox",
+    "queues": "Queues",
+    "queuesDescription": "Drag tasks from Inbox to assign",
+    "queuesDescriptionClick": "Click \"Add from Inbox\" to assign tasks",
+    "noQueues": "No queues defined",
+    "createQueueHint": "Go to Settings to create queues"
+  },
   "inbox": {
     "title": "Inbox",
     "addTask": "Add a new task...",
     "timeEstimation": "Required time estimation",
     "noTasks": "No tasks in inbox",
-    "noTasksHint": "Add a task above to get started"
+    "noTasksHint": "Add a task above to get started",
+    "editTask": "Edit Task",
+    "deleteTask": "Delete Task",
+    "taskTitle": "Task Title",
+    "deleteConfirm": "Are you sure you want to delete \"{{title}}\"?",
+    "confirmDelete": "Delete this task?",
+    "assignToQueue": "Assign to Queue",
+    "noQueues": "No queues available"
   },
   "weeklyPlan": {
     "title": "Weekly Plan View",
@@ -20,7 +35,13 @@
   "queue": {
     "capacity": "Capacity",
     "buffer": "Buffer",
-    "overCapacity": "OVER Capacity!"
+    "overCapacity": "OVER Capacity!",
+    "dropHere": "Drop tasks here",
+    "completed": "Completed",
+    "addTask": "Add Task",
+    "selectFromInbox": "Select a task from Inbox",
+    "noInboxTasks": "No tasks in inbox",
+    "addFromInbox": "Add from Inbox"
   },
   "common": {
     "monday": "Mon",
@@ -29,7 +50,10 @@
     "thursday": "Thu",
     "friday": "Fri",
     "saturday": "Sat",
-    "sunday": "Sun"
+    "sunday": "Sun",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete"
   },
   "language": {
     "ko": "한국어",

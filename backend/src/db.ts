@@ -29,56 +29,75 @@ if (!existsSync(DATA_PATH)) {
   mkdirSync(DATA_PATH, { recursive: true });
 }
 
-// Default data
+// Default data - 새로운 구조
 const defaultData: Database = {
+  // Queue 타입 정의 (Deep Work, Admin 등)
   queues: [
     {
-      id: "q_001",
+      id: "q_deepwork",
+      title: "Deep Work",
+      color: "#3B82F6",
+      tasks: [],
+    },
+    {
+      id: "q_admin",
+      title: "Admin",
+      color: "#10B981",
+      tasks: [],
+    },
+    {
+      id: "q_creative",
+      title: "Creative",
+      color: "#8B5CF6",
+      tasks: [],
+    },
+  ],
+  // Queue가 배치되는 시간대 (요일별)
+  queueTemplates: [
+    // Deep Work: 월/수/금 09:00-11:00
+    {
+      id: "qt_001",
+      queueId: "q_deepwork",
       dayOfWeek: 1, // Monday
       startTime: "09:00",
       endTime: "11:00",
-      title: "Deep Work",
-      color: "#3B82F6",
     },
     {
-      id: "q_002",
-      dayOfWeek: 1,
-      startTime: "13:00",
-      endTime: "15:00",
-      title: "1-3 PM",
-      color: "#10B981",
+      id: "qt_002",
+      queueId: "q_deepwork",
+      dayOfWeek: 3, // Wednesday
+      startTime: "09:00",
+      endTime: "11:00",
     },
     {
-      id: "q_003",
-      dayOfWeek: 2,
+      id: "qt_003",
+      queueId: "q_deepwork",
+      dayOfWeek: 5, // Friday
+      startTime: "09:00",
+      endTime: "11:00",
+    },
+    // Admin: 화/목 14:00-16:00
+    {
+      id: "qt_004",
+      queueId: "q_admin",
+      dayOfWeek: 2, // Tuesday
       startTime: "14:00",
       endTime: "16:00",
-      title: "Urgent Report",
-      color: "#EF4444",
     },
     {
-      id: "q_004",
-      dayOfWeek: 3,
-      startTime: "09:00",
-      endTime: "11:00",
-      title: "Deep Work Queue",
-      color: "#3B82F6",
+      id: "qt_005",
+      queueId: "q_admin",
+      dayOfWeek: 4, // Thursday
+      startTime: "14:00",
+      endTime: "16:00",
     },
+    // Creative: 월 14:00-16:00
     {
-      id: "q_005",
-      dayOfWeek: 4,
-      startTime: "09:00",
-      endTime: "11:00",
-      title: "Admin Queue",
-      color: "#6B7280",
-    },
-    {
-      id: "q_006",
-      dayOfWeek: 5,
-      startTime: "09:00",
-      endTime: "11:00",
-      title: "9-11 AM",
-      color: "#10B981",
+      id: "qt_006",
+      queueId: "q_creative",
+      dayOfWeek: 1, // Monday
+      startTime: "14:00",
+      endTime: "16:00",
     },
   ],
   tasks: [
@@ -87,38 +106,42 @@ const defaultData: Database = {
       title: "Write Blog Post",
       durationMinutes: 60,
       status: "inbox",
-      assignedTo: null,
+      assignedQueueId: null,
+      completedAt: null,
     },
     {
       id: "t_002",
       title: "Prepare Presentation",
       durationMinutes: 90,
       status: "inbox",
-      assignedTo: null,
+      assignedQueueId: null,
+      completedAt: null,
     },
     {
       id: "t_003",
       title: "Client Meeting Prep",
       durationMinutes: 45,
       status: "inbox",
-      assignedTo: null,
+      assignedQueueId: null,
+      completedAt: null,
     },
     {
       id: "t_004",
       title: "Review Code",
       durationMinutes: 30,
       status: "inbox",
-      assignedTo: null,
+      assignedQueueId: null,
+      completedAt: null,
     },
     {
       id: "t_005",
       title: "Email Cleanup",
       durationMinutes: 30,
       status: "inbox",
-      assignedTo: null,
+      assignedQueueId: null,
+      completedAt: null,
     },
   ],
-  weeklyPlan: {},
   settings: {
     language: "en",
   },

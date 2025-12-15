@@ -1,87 +1,69 @@
-import { useEffect, useState } from "react";
-import {
-  DndContext,
-  DragEndEvent,
-  DragOverlay,
-  DragStartEvent,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useStore } from "./store/useStore";
 import { Header } from "./components/Header";
 import { Inbox } from "./components/Inbox";
+import { QueueDashboard } from "./components/QueueDashboard";
 import { WeeklyPlanView } from "./components/WeeklyPlanView";
-import { DragOverlayContent } from "./components/DragOverlay";
-import { Task } from "./types";
+import { Sidebar } from "./components/Sidebar";
 
 function App() {
-  const { fetchQueues, fetchTasks, fetchWeeklyPlan, assignTask, tasks } =
-    useStore();
-  const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const { t } = useTranslation();
+  const { fetchAll, activeTab, setActiveTab } = useStore();
 
   // Fetch initial data
   useEffect(() => {
-    fetchQueues();
-    fetchTasks();
-    fetchWeeklyPlan();
+    fetchAll();
   }, []);
 
-  // Configure sensors for drag and drop
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
-    })
-  );
-
-  // Handle drag start
-  const handleDragStart = (event: DragStartEvent) => {
-    const { active } = event;
-    const task = tasks.find((t) => t.id === active.id);
-    if (task) {
-      setActiveTask(task);
-    }
-  };
-
-  // Handle drag end
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    setActiveTask(null);
-
-    if (!over) return;
-
-    const taskId = active.id as string;
-    const dropData = over.data.current as
-      | { queue: { id: string }; date: string }
-      | undefined;
-
-    if (dropData) {
-      const { queue, date } = dropData;
-      assignTask(taskId, queue.id, date);
-    }
-  };
-
   return (
-    <DndContext
-      sensors={sensors}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-    >
-      <div className="h-screen flex flex-col bg-gray-50">
-        <Header />
-        <div className="flex-1 flex overflow-hidden">
-          <Inbox />
-          <WeeklyPlanView />
-        </div>
-      </div>
+    <div className="h-screen flex flex-col bg-gray-50">
+      <Header />
+      <div className="flex-1 flex overflow-hidden">
+        {/* Sidebar with tabs */}
+        <Sidebar>
+          <div className="flex flex-col h-full">
+            {/* Tab Navigation */}
+            <div className="flex border-b border-gray-200">
+              <button
+                onClick={() => setActiveTab("inbox")}
+                className={`
+                  flex-1 px-4 py-3 text-sm font-medium transition-colors
+                  ${
+                    activeTab === "inbox"
+                      ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50/50"
+                      : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                  }
+                `}
+              >
+                {t("sidebar.inbox", "Inbox")}
+              </button>
+              <button
+                onClick={() => setActiveTab("queues")}
+                className={`
+                  flex-1 px-4 py-3 text-sm font-medium transition-colors
+                  ${
+                    activeTab === "queues"
+                      ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50/50"
+                      : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                  }
+                `}
+              >
+                {t("sidebar.queues", "Queues")}
+              </button>
+            </div>
 
-      {/* Drag Overlay */}
-      <DragOverlay>
-        {activeTask ? <DragOverlayContent task={activeTask} /> : null}
-      </DragOverlay>
-    </DndContext>
+            {/* Tab Content */}
+            <div className="flex-1 overflow-hidden">
+              {activeTab === "inbox" ? <Inbox /> : <QueueDashboard />}
+            </div>
+          </div>
+        </Sidebar>
+
+        {/* Main content */}
+        <WeeklyPlanView />
+      </div>
+    </div>
   );
 }
 

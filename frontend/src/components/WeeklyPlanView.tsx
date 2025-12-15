@@ -2,10 +2,11 @@ import { useTranslation } from "react-i18next";
 import { useStore } from "../store/useStore";
 import { QueueCard } from "./QueueCard";
 import { getWeekDates } from "../utils";
+import { Queue, QueueTemplate, Task } from "../types";
 
 export function WeeklyPlanView() {
   const { t } = useTranslation();
-  const { queues, tasks, emptyAllQueues } = useStore();
+  const { queues, queueTemplates, tasks, emptyAllQueues } = useStore();
   const weekDates = getWeekDates();
 
   // Map day names to translation keys
@@ -19,19 +20,21 @@ export function WeeklyPlanView() {
     Sun: "common.sunday",
   };
 
-  // Get tasks assigned to a specific queue on a specific date
-  const getQueueTasks = (queueId: string, date: string) => {
-    return tasks.filter(
-      (t) =>
-        t.status === "assigned" &&
-        t.assignedTo?.queueId === queueId &&
-        t.assignedTo?.date === date
-    );
+  // Get queue templates for a specific day of week
+  const getTemplatesForDay = (dayOfWeek: number): QueueTemplate[] => {
+    return queueTemplates.filter((qt) => qt.dayOfWeek === dayOfWeek);
   };
 
-  // Get queues for a specific day of week
-  const getQueuesForDay = (dayOfWeek: number) => {
-    return queues.filter((q) => q.dayOfWeek === dayOfWeek);
+  // Get queue by id
+  const getQueueById = (queueId: string): Queue | undefined => {
+    return queues.find((q) => q.id === queueId);
+  };
+
+  // Get tasks for a specific queue (tasks assigned to this queue, sorted alphabetically)
+  const getQueueTasks = (queueId: string): Task[] => {
+    return tasks
+      .filter((t) => t.assignedQueueId === queueId)
+      .sort((a, b) => a.title.localeCompare(b.title));
   };
 
   return (
@@ -64,7 +67,7 @@ export function WeeklyPlanView() {
       <div className="flex-1 overflow-auto p-4">
         <div className="grid grid-cols-5 gap-4 min-w-[800px]">
           {weekDates.map(({ date, dayOfWeek, dayName }) => {
-            const dayQueues = getQueuesForDay(dayOfWeek);
+            const dayTemplates = getTemplatesForDay(dayOfWeek);
             const translatedDayName = t(dayNameKeys[dayName] || dayName);
 
             return (
@@ -78,19 +81,24 @@ export function WeeklyPlanView() {
 
                 {/* Queues for this day */}
                 <div className="space-y-3">
-                  {dayQueues.length === 0 ? (
+                  {dayTemplates.length === 0 ? (
                     <div className="p-4 text-center text-gray-400 text-sm border-2 border-dashed border-gray-200 rounded-lg">
                       {t("weeklyPlan.noQueues")}
                     </div>
                   ) : (
-                    dayQueues.map((queue) => (
-                      <QueueCard
-                        key={`${queue.id}-${date}`}
-                        queue={queue}
-                        date={date}
-                        tasks={getQueueTasks(queue.id, date)}
-                      />
-                    ))
+                    dayTemplates.map((template) => {
+                      const queue = getQueueById(template.queueId);
+                      if (!queue) return null;
+
+                      return (
+                        <QueueCard
+                          key={template.id}
+                          queue={queue}
+                          template={template}
+                          tasks={getQueueTasks(queue.id)}
+                        />
+                      );
+                    })
                   )}
                 </div>
               </div>

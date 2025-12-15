@@ -1,26 +1,47 @@
 {
   "app": {
-    "title": "ビウム (bium)"
+    "title": "ビウム"
   },
   "header": {
     "language": "言語"
+  },
+  "sidebar": {
+    "inbox": "インボックス",
+    "queues": "キュー",
+    "queuesDescription": "インボックスからタスクをドラッグして割り当て",
+    "queuesDescriptionClick": "「インボックスから追加」をクリックしてタスクを割り当て",
+    "noQueues": "定義されたキューがありません",
+    "createQueueHint": "設定でキューを作成してください"
   },
   "inbox": {
     "title": "インボックス",
     "addTask": "新しいタスクを追加...",
     "timeEstimation": "予定所要時間",
     "noTasks": "インボックスにタスクがありません",
-    "noTasksHint": "上記からタスクを追加してください"
+    "noTasksHint": "上記からタスクを追加してください",
+    "editTask": "タスクを編集",
+    "deleteTask": "タスクを削除",
+    "taskTitle": "タスク名",
+    "deleteConfirm": "「{{title}}」を削除しますか？",
+    "confirmDelete": "このタスクを削除しますか？",
+    "assignToQueue": "キューに割り当て",
+    "noQueues": "利用可能なキューがありません"
   },
   "weeklyPlan": {
-    "title": "週間計画ビュー",
+    "title": "週間計画",
     "emptyAllQueues": "すべてのキューを空にする",
     "noQueues": "キューなし"
   },
   "queue": {
     "capacity": "容量",
     "buffer": "バッファ",
-    "overCapacity": "容量超過!"
+    "overCapacity": "容量超過!",
+    "dropHere": "ここにタスクをドロップ",
+    "completed": "完了",
+    "addTask": "タスクを追加",
+    "selectFromInbox": "インボックスからタスクを選択",
+    "noInboxTasks": "インボックスにタスクがありません",
+    "addFromInbox": "インボックスから追加"
   },
   "common": {
     "monday": "月",
@@ -29,7 +50,10 @@
     "thursday": "木",
     "friday": "金",
     "saturday": "土",
-    "sunday": "日"
+    "sunday": "日",
+    "cancel": "キャンセル",
+    "save": "保存",
+    "delete": "削除"
   },
   "language": {
     "ko": "한국어",

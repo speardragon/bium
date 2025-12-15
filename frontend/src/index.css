@@ -27,20 +27,6 @@ body {
   background: #a1a1a1;
 }
 
-/* Queue water level animation */
-@keyframes fillWater {
-  from {
-    height: 0%;
-  }
-  to {
-    height: var(--fill-level);
-  }
-}
-
-.water-fill {
-  animation: fillWater 0.5s ease-out forwards;
-}
-
 /* Buffer pattern */
 .buffer-pattern {
   background-image: repeating-linear-gradient(

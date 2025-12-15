@@ -12,7 +12,7 @@ const languages: { code: SupportedLanguage; label: string; flag: string }[] = [
 
 export function Header() {
   const { t } = useTranslation();
-  const { currentWeekKey, settings, setLanguage, fetchSettings } = useStore();
+  const { settings, setLanguage, fetchSettings } = useStore();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -58,7 +58,7 @@ export function Header() {
         </h1>
       </div>
       <div className="flex items-center gap-4">
-        <span className="text-sm text-gray-500">{currentWeekKey}</span>
+        {/* Week key removed - no longer needed */}
         <div className="flex items-center gap-2">
           {/* Language Selector */}
           <div className="relative" ref={dropdownRef}>

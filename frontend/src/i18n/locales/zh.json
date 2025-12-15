@@ -1,26 +1,47 @@
 {
   "app": {
-    "title": "清空 (bium)"
+    "title": "清空"
   },
   "header": {
     "language": "语言"
+  },
+  "sidebar": {
+    "inbox": "收件箱",
+    "queues": "队列",
+    "queuesDescription": "从收件箱拖动任务以分配",
+    "queuesDescriptionClick": "点击\"从收件箱添加\"来分配任务",
+    "noQueues": "没有定义的队列",
+    "createQueueHint": "在设置中创建队列"
   },
   "inbox": {
     "title": "收件箱",
     "addTask": "添加新任务...",
     "timeEstimation": "预计所需时间",
     "noTasks": "收件箱中没有任务",
-    "noTasksHint": "在上方添加任务开始使用"
+    "noTasksHint": "在上方添加任务开始使用",
+    "editTask": "编辑任务",
+    "deleteTask": "删除任务",
+    "taskTitle": "任务标题",
+    "deleteConfirm": "确定要删除\"{{title}}\"吗？",
+    "confirmDelete": "删除此任务？",
+    "assignToQueue": "分配到队列",
+    "noQueues": "没有可用的队列"
   },
   "weeklyPlan": {
-    "title": "周计划视图",
+    "title": "周计划",
     "emptyAllQueues": "清空所有队列",
     "noQueues": "没有队列"
   },
   "queue": {
     "capacity": "容量",
     "buffer": "缓冲",
-    "overCapacity": "超出容量!"
+    "overCapacity": "超出容量!",
+    "dropHere": "将任务放在这里",
+    "completed": "已完成",
+    "addTask": "添加任务",
+    "selectFromInbox": "从收件箱选择任务",
+    "noInboxTasks": "收件箱中没有任务",
+    "addFromInbox": "从收件箱添加"
   },
   "common": {
     "monday": "周一",
@@ -29,7 +50,10 @@
     "thursday": "周四",
     "friday": "周五",
     "saturday": "周六",
-    "sunday": "周日"
+    "sunday": "周日",
+    "cancel": "取消",
+    "save": "保存",
+    "delete": "删除"
   },
   "language": {
     "ko": "한국어",

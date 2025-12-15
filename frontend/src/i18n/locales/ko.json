@@ -1,26 +1,47 @@
 {
   "app": {
-    "title": "비움 (bium)"
+    "title": "비움"
   },
   "header": {
     "language": "언어"
+  },
+  "sidebar": {
+    "inbox": "인박스",
+    "queues": "큐",
+    "queuesDescription": "인박스에서 작업을 드래그하여 할당",
+    "queuesDescriptionClick": "\"인박스에서 추가\"를 클릭하여 작업 할당",
+    "noQueues": "정의된 큐가 없습니다",
+    "createQueueHint": "설정에서 큐를 생성하세요"
   },
   "inbox": {
     "title": "인박스",
     "addTask": "새 작업 추가...",
     "timeEstimation": "예상 소요 시간",
     "noTasks": "인박스가 비어있습니다",
-    "noTasksHint": "위에서 작업을 추가하세요"
+    "noTasksHint": "위에서 작업을 추가하세요",
+    "editTask": "작업 수정",
+    "deleteTask": "작업 삭제",
+    "taskTitle": "작업 제목",
+    "deleteConfirm": "\"{{title}}\" 작업을 삭제하시겠습니까?",
+    "confirmDelete": "이 작업을 삭제하시겠습니까?",
+    "assignToQueue": "큐에 할당",
+    "noQueues": "사용 가능한 큐가 없습니다"
   },
   "weeklyPlan": {
-    "title": "주간 계획 보기",
+    "title": "주간 계획",
     "emptyAllQueues": "모든 큐 비우기",
     "noQueues": "큐 없음"
   },
   "queue": {
     "capacity": "용량",
     "buffer": "버퍼",
-    "overCapacity": "초과!"
+    "overCapacity": "초과!",
+    "dropHere": "여기에 작업을 놓으세요",
+    "completed": "완료됨",
+    "addTask": "작업 추가",
+    "selectFromInbox": "인박스에서 작업 선택",
+    "noInboxTasks": "인박스에 작업이 없습니다",
+    "addFromInbox": "인박스에서 추가"
   },
   "common": {
     "monday": "월",
@@ -29,7 +50,10 @@
     "thursday": "목",
     "friday": "금",
     "saturday": "토",
-    "sunday": "일"
+    "sunday": "일",
+    "cancel": "취소",
+    "save": "저장",
+    "delete": "삭제"
   },
   "language": {
     "ko": "한국어",

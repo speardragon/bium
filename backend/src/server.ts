@@ -3,7 +3,7 @@ import express from "express";
 import cors from "cors";
 import { initDb, db } from "./db.js";
 import { v4 as uuidv4 } from "uuid";
-import { Queue, Task, SupportedLanguage } from "./types.js";
+import { Queue, QueueTemplate, Task, SupportedLanguage } from "./types.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,15 +23,13 @@ app.get("/api/queues", (req, res) => {
 
 // Create a new queue
 app.post("/api/queues", async (req, res) => {
-  const { dayOfWeek, startTime, endTime, title, color } = req.body;
+  const { title, color } = req.body;
 
   const newQueue: Queue = {
     id: `q_${uuidv4().slice(0, 8)}`,
-    dayOfWeek,
-    startTime,
-    endTime,
     title,
     color: color || "#3B82F6",
+    tasks: [],
   };
 
   db.data?.queues.push(newQueue);
@@ -62,7 +60,156 @@ app.delete("/api/queues/:id", async (req, res) => {
 
   if (!db.data) return res.status(500).json({ error: "Database error" });
 
+  // Also remove queue templates that reference this queue
+  db.data.queueTemplates = db.data.queueTemplates.filter((qt) => qt.queueId !== id);
+  
+  // Move tasks assigned to this queue back to inbox
+  db.data.tasks.forEach((task) => {
+    if (task.assignedQueueId === id) {
+      task.status = "inbox";
+      task.assignedQueueId = null;
+    }
+  });
+
   db.data.queues = db.data.queues.filter((q) => q.id !== id);
+  await db.write();
+
+  res.status(204).send();
+});
+
+// Assign task to a queue
+app.post("/api/queues/:id/assign", async (req, res) => {
+  const { id } = req.params;
+  const { taskId } = req.body;
+
+  if (!db.data) return res.status(500).json({ error: "Database error" });
+
+  const queueIndex = db.data.queues.findIndex((q) => q.id === id);
+  if (queueIndex === -1) {
+    return res.status(404).json({ error: "Queue not found" });
+  }
+
+  const taskIndex = db.data.tasks.findIndex((t) => t.id === taskId);
+  if (taskIndex === -1) {
+    return res.status(404).json({ error: "Task not found" });
+  }
+
+  // Remove from previous queue if assigned
+  const previousQueueId = db.data.tasks[taskIndex].assignedQueueId;
+  if (previousQueueId) {
+    const prevQueueIndex = db.data.queues.findIndex((q) => q.id === previousQueueId);
+    if (prevQueueIndex !== -1) {
+      db.data.queues[prevQueueIndex].tasks = db.data.queues[prevQueueIndex].tasks.filter(
+        (t) => t !== taskId
+      );
+    }
+  }
+
+  // Add to new queue
+  if (!db.data.queues[queueIndex].tasks.includes(taskId)) {
+    db.data.queues[queueIndex].tasks.push(taskId);
+  }
+
+  // Update task
+  db.data.tasks[taskIndex].status = "assigned";
+  db.data.tasks[taskIndex].assignedQueueId = id;
+
+  await db.write();
+
+  res.json({ queue: db.data.queues[queueIndex], task: db.data.tasks[taskIndex] });
+});
+
+// Unassign task from queue (move back to inbox)
+app.post("/api/queues/:id/unassign", async (req, res) => {
+  const { id } = req.params;
+  const { taskId } = req.body;
+
+  if (!db.data) return res.status(500).json({ error: "Database error" });
+
+  const queueIndex = db.data.queues.findIndex((q) => q.id === id);
+  if (queueIndex === -1) {
+    return res.status(404).json({ error: "Queue not found" });
+  }
+
+  const taskIndex = db.data.tasks.findIndex((t) => t.id === taskId);
+  if (taskIndex === -1) {
+    return res.status(404).json({ error: "Task not found" });
+  }
+
+  // Remove from queue
+  db.data.queues[queueIndex].tasks = db.data.queues[queueIndex].tasks.filter(
+    (t) => t !== taskId
+  );
+
+  // Update task
+  db.data.tasks[taskIndex].status = "inbox";
+  db.data.tasks[taskIndex].assignedQueueId = null;
+  db.data.tasks[taskIndex].completedAt = null;
+
+  await db.write();
+
+  res.json({ queue: db.data.queues[queueIndex], task: db.data.tasks[taskIndex] });
+});
+
+// ==================== QUEUE TEMPLATES API ====================
+
+// Get all queue templates
+app.get("/api/queue-templates", (req, res) => {
+  res.json(db.data?.queueTemplates || []);
+});
+
+// Create a new queue template
+app.post("/api/queue-templates", async (req, res) => {
+  const { queueId, dayOfWeek, startTime, endTime } = req.body;
+
+  if (!db.data) return res.status(500).json({ error: "Database error" });
+
+  // Verify queue exists
+  const queue = db.data.queues.find((q) => q.id === queueId);
+  if (!queue) {
+    return res.status(404).json({ error: "Queue not found" });
+  }
+
+  const newTemplate: QueueTemplate = {
+    id: `qt_${uuidv4().slice(0, 8)}`,
+    queueId,
+    dayOfWeek,
+    startTime,
+    endTime,
+  };
+
+  db.data.queueTemplates.push(newTemplate);
+  await db.write();
+
+  res.status(201).json(newTemplate);
+});
+
+// Update a queue template
+app.put("/api/queue-templates/:id", async (req, res) => {
+  const { id } = req.params;
+  const updates = req.body;
+
+  const templateIndex = db.data?.queueTemplates.findIndex((qt) => qt.id === id);
+  if (templateIndex === undefined || templateIndex === -1) {
+    return res.status(404).json({ error: "Queue template not found" });
+  }
+
+  db.data!.queueTemplates[templateIndex] = {
+    ...db.data!.queueTemplates[templateIndex],
+    ...updates,
+  };
+  await db.write();
+
+  res.json(db.data!.queueTemplates[templateIndex]);
+});
+
+// Delete a queue template
+app.delete("/api/queue-templates/:id", async (req, res) => {
+  const { id } = req.params;
+
+  if (!db.data) return res.status(500).json({ error: "Database error" });
+
+  db.data.queueTemplates = db.data.queueTemplates.filter((qt) => qt.id !== id);
   await db.write();
 
   res.status(204).send();
@@ -90,7 +237,8 @@ app.post("/api/tasks", async (req, res) => {
     title,
     durationMinutes: durationMinutes || 30, // Default 30 minutes
     status: "inbox",
-    assignedTo: null,
+    assignedQueueId: null,
+    completedAt: null,
   };
 
   db.data?.tasks.push(newTask);
@@ -115,11 +263,59 @@ app.put("/api/tasks/:id", async (req, res) => {
   res.json(db.data!.tasks[taskIndex]);
 });
 
+// Complete a task
+app.post("/api/tasks/:id/complete", async (req, res) => {
+  const { id } = req.params;
+
+  if (!db.data) return res.status(500).json({ error: "Database error" });
+
+  const taskIndex = db.data.tasks.findIndex((t) => t.id === id);
+  if (taskIndex === -1) {
+    return res.status(404).json({ error: "Task not found" });
+  }
+
+  db.data.tasks[taskIndex].status = "completed";
+  db.data.tasks[taskIndex].completedAt = new Date().toISOString();
+
+  await db.write();
+
+  res.json(db.data.tasks[taskIndex]);
+});
+
+// Uncomplete a task (mark as assigned again)
+app.post("/api/tasks/:id/uncomplete", async (req, res) => {
+  const { id } = req.params;
+
+  if (!db.data) return res.status(500).json({ error: "Database error" });
+
+  const taskIndex = db.data.tasks.findIndex((t) => t.id === id);
+  if (taskIndex === -1) {
+    return res.status(404).json({ error: "Task not found" });
+  }
+
+  // Only uncomplete if task is completed and has an assigned queue
+  if (db.data.tasks[taskIndex].assignedQueueId) {
+    db.data.tasks[taskIndex].status = "assigned";
+  } else {
+    db.data.tasks[taskIndex].status = "inbox";
+  }
+  db.data.tasks[taskIndex].completedAt = null;
+
+  await db.write();
+
+  res.json(db.data.tasks[taskIndex]);
+});
+
 // Delete a task
 app.delete("/api/tasks/:id", async (req, res) => {
   const { id } = req.params;
 
   if (!db.data) return res.status(500).json({ error: "Database error" });
+
+  // Remove from any queue that has this task
+  db.data.queues.forEach((queue) => {
+    queue.tasks = queue.tasks.filter((taskId) => taskId !== id);
+  });
 
   db.data.tasks = db.data.tasks.filter((t) => t.id !== id);
   await db.write();
@@ -127,109 +323,25 @@ app.delete("/api/tasks/:id", async (req, res) => {
   res.status(204).send();
 });
 
-// ==================== WEEKLY PLAN API ====================
+// ==================== BULK OPERATIONS ====================
 
-// Get weekly plan for a specific week
-app.get("/api/weekly-plan/:weekKey", (req, res) => {
-  const { weekKey } = req.params;
-  const plan = db.data?.weeklyPlan[weekKey] || [];
-  res.json(plan);
-});
-
-// Get full weekly plan
-app.get("/api/weekly-plan", (req, res) => {
-  res.json(db.data?.weeklyPlan || {});
-});
-
-// Assign task to a queue
-app.post("/api/weekly-plan/assign", async (req, res) => {
-  const { taskId, queueId, date, weekKey } = req.body;
-
+// Empty all queues (move all tasks back to inbox)
+app.post("/api/queues/empty-all", async (req, res) => {
   if (!db.data) return res.status(500).json({ error: "Database error" });
 
-  // Update task status
-  const taskIndex = db.data.tasks.findIndex((t) => t.id === taskId);
-  if (taskIndex === -1) {
-    return res.status(404).json({ error: "Task not found" });
-  }
-
-  db.data.tasks[taskIndex].status = "assigned";
-  db.data.tasks[taskIndex].assignedTo = { date, queueId };
-
-  // Update weekly plan
-  if (!db.data.weeklyPlan[weekKey]) {
-    db.data.weeklyPlan[weekKey] = [];
-  }
-
-  let entry = db.data.weeklyPlan[weekKey].find(
-    (e) => e.date === date && e.queueTemplateId === queueId
-  );
-
-  if (!entry) {
-    entry = { date, queueTemplateId: queueId, tasks: [] };
-    db.data.weeklyPlan[weekKey].push(entry);
-  }
-
-  if (!entry.tasks.includes(taskId)) {
-    entry.tasks.push(taskId);
-  }
-
-  await db.write();
-
-  res.json({ task: db.data.tasks[taskIndex], entry });
-});
-
-// Unassign task from queue (move back to inbox)
-app.post("/api/weekly-plan/unassign", async (req, res) => {
-  const { taskId, weekKey } = req.body;
-
-  if (!db.data) return res.status(500).json({ error: "Database error" });
-
-  // Get task info before unassigning
-  const task = db.data.tasks.find((t) => t.id === taskId);
-  if (!task) {
-    return res.status(404).json({ error: "Task not found" });
-  }
-
-  // Remove from weekly plan
-  if (db.data.weeklyPlan[weekKey]) {
-    db.data.weeklyPlan[weekKey].forEach((entry) => {
-      entry.tasks = entry.tasks.filter((id) => id !== taskId);
-    });
-    // Clean up empty entries
-    db.data.weeklyPlan[weekKey] = db.data.weeklyPlan[weekKey].filter(
-      (entry) => entry.tasks.length > 0
-    );
-  }
-
-  // Update task status
-  const taskIndex = db.data.tasks.findIndex((t) => t.id === taskId);
-  db.data.tasks[taskIndex].status = "inbox";
-  db.data.tasks[taskIndex].assignedTo = null;
-
-  await db.write();
-
-  res.json(db.data.tasks[taskIndex]);
-});
-
-// Empty all queues for a week
-app.post("/api/weekly-plan/empty-all", async (req, res) => {
-  const { weekKey } = req.body;
-
-  if (!db.data) return res.status(500).json({ error: "Database error" });
-
-  // Move all assigned tasks back to inbox
-  db.data.tasks.forEach((task) => {
-    if (task.status === "assigned") {
-      task.status = "inbox";
-      task.assignedTo = null;
-    }
+  // Clear all queue task arrays
+  db.data.queues.forEach((queue) => {
+    queue.tasks = [];
   });
 
-  // Clear weekly plan for the week
-  if (db.data.weeklyPlan[weekKey]) {
-    delete db.data.weeklyPlan[weekKey];
-  }
+  // Move all assigned/completed tasks back to inbox
+  db.data.tasks.forEach((task) => {
+    if (task.status === "assigned" || task.status === "completed") {
+      task.status = "inbox";
+      task.assignedQueueId = null;
+      task.completedAt = null;
+    }
+  });
 
   await db.write();
 
