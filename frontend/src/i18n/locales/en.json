@@ -3,7 +3,8 @@
     "title": "bium"
   },
   "header": {
-    "language": "Language"
+    "language": "Language",
+    "guide": "Guide"
   },
   "sidebar": {
     "inbox": "Inbox",
@@ -60,5 +61,90 @@
     "en": "English",
     "ja": "日本語",
     "zh": "中文"
+  },
+  "guide": {
+    "nav": {
+      "tryApp": "Try App"
+    },
+    "hero": {
+      "badge": "Queue-based Time Blocking",
+      "title": "bium",
+      "subtitle": "Empty to Fill",
+      "tagline": "Intentional productivity through queue-based time blocking. Empty your mind, fill your time with purpose.",
+      "cta": "Start Using bium",
+      "learnMore": "Learn More"
+    },
+    "philosophy": {
+      "title": "The Meaning of \"비움\" (Bium)",
+      "description": "The Korean word \"비움\" (Bium) comes from \"비우다\" (to empty). It embodies the philosophy that by creating empty space, we make room for what truly matters.",
+      "point1": "Empty tasks into queues → Peace of mind",
+      "point2": "Empty time blocks → Space for deep focus",
+      "point3": "Empty completed tasks → Sense of progress",
+      "character": "Empty / Void / Space",
+      "characterDesc": "The concept of productive emptiness - creating space for what matters"
+    },
+    "concept": {
+      "title": "What is Queue-based Time Blocking?",
+      "subtitle": "A flexible approach to time management that adapts to your reality",
+      "traditional": {
+        "title": "Traditional Scheduling",
+        "description": "Rigid time slots. When something takes longer or unexpected tasks come up, your entire schedule falls apart."
+      },
+      "queueBased": {
+        "title": "Queue-based Blocking",
+        "description": "Flexible time blocks. Assign tasks to queues based on type, not specific times. Work through your queue when the block arrives."
+      }
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "subtitle": "Three simple steps to intentional productivity",
+      "step1": {
+        "title": "Capture",
+        "description": "Quickly add tasks to your Inbox with time estimates. Don't worry about when - just capture everything."
+      },
+      "step2": {
+        "title": "Assign",
+        "description": "Move tasks to appropriate queues. Deep Work, Admin, Creative - organize by the type of focus needed."
+      },
+      "step3": {
+        "title": "Execute",
+        "description": "When a time block arrives, work through your queue. Check off tasks as you complete them."
+      }
+    },
+    "features": {
+      "title": "Key Features",
+      "inbox": {
+        "title": "Quick Capture",
+        "description": "Add tasks instantly with smart time estimation"
+      },
+      "capacity": {
+        "title": "Capacity Gauge",
+        "description": "Visual feedback to prevent over-commitment"
+      },
+      "weekView": {
+        "title": "Week View",
+        "description": "See your entire week at a glance"
+      },
+      "tracking": {
+        "title": "Progress Tracking",
+        "description": "Check off tasks and see your accomplishments"
+      }
+    },
+    "cta": {
+      "title": "Ready to empty your mind?",
+      "subtitle": "Free, open source, no sign-up required. Start organizing your time with intention.",
+      "button": "Start Using bium"
+    },
+    "footer": {
+      "copyright": "© 2025 bium",
+      "madeWith": "Made with speardragon"
+    },
+    "placeholder": {
+      "appPreview": "Main dashboard showing weekly queue view with sidebar containing Inbox and Queue tabs",
+      "comparison": "Comparison diagram: Traditional scheduling (left) shows rigid hourly slots that break when disrupted. Queue-based approach (right) shows flexible task queues that adapt to changes.",
+      "inbox": "Inbox: Quick task entry with time slider, list of unassigned tasks",
+      "queueDashboard": "Queue Dashboard: Colored queue cards with capacity gauges, assigned tasks with checkboxes",
+      "weeklyView": "Weekly View: 7-day calendar with colored time blocks showing queue schedules"
+    }
   }
 }

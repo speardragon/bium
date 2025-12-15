@@ -3,7 +3,8 @@
     "title": "清空"
   },
   "header": {
-    "language": "语言"
+    "language": "语言",
+    "guide": "指南"
   },
   "sidebar": {
     "inbox": "收件箱",
@@ -60,5 +61,90 @@
     "en": "English",
     "ja": "日本語",
     "zh": "中文"
+  },
+  "guide": {
+    "nav": {
+      "tryApp": "试用应用"
+    },
+    "hero": {
+      "badge": "基于队列的时间阻塞",
+      "title": "清空",
+      "subtitle": "清空以填充",
+      "tagline": "通过基于队列的时间阻塞实现有意识的生产力。清空你的思绪，用目标填充你的时间。",
+      "cta": "开始使用清空",
+      "learnMore": "了解更多"
+    },
+    "philosophy": {
+      "title": "\"비움\"（清空）的含义",
+      "description": "韩语\"비움\"（Bium）源自\"비우다\"（清空）。它体现了这样一种哲学：通过创造空的空间，我们为真正重要的事物腾出空间。",
+      "point1": "将任务清空到队列 → 内心平静",
+      "point2": "清空时间块 → 深度专注的空间",
+      "point3": "清空已完成的任务 → 成就感和进步",
+      "character": "空 / 虚 / 留白",
+      "characterDesc": "生产性空虚的概念 - 为重要的事物创造空间"
+    },
+    "concept": {
+      "title": "什么是基于队列的时间阻塞？",
+      "subtitle": "适应现实的灵活时间管理方法",
+      "traditional": {
+        "title": "传统调度",
+        "description": "固定的时间槽。当某事花费更长时间或出现意外任务时，整个时间表就会崩溃。"
+      },
+      "queueBased": {
+        "title": "基于队列的阻塞",
+        "description": "灵活的时间块。根据类型而非特定时间将任务分配到队列。当时间块到来时处理你的队列。"
+      }
+    },
+    "howItWorks": {
+      "title": "如何使用",
+      "subtitle": "有意识生产力的三个简单步骤",
+      "step1": {
+        "title": "捕获",
+        "description": "快速将任务添加到收件箱并估计时间。不用担心什么时候做 - 只需捕获一切。"
+      },
+      "step2": {
+        "title": "分配",
+        "description": "将任务移动到适当的队列。深度工作、行政事务、创意工作 - 按所需的专注类型组织。"
+      },
+      "step3": {
+        "title": "执行",
+        "description": "当时间块到来时，处理你的队列。完成任务后勾选它们。"
+      }
+    },
+    "features": {
+      "title": "主要功能",
+      "inbox": {
+        "title": "快速捕获",
+        "description": "通过智能时间估计即时添加任务"
+      },
+      "capacity": {
+        "title": "容量仪表",
+        "description": "防止过度承诺的视觉反馈"
+      },
+      "weekView": {
+        "title": "周视图",
+        "description": "一目了然地查看整周"
+      },
+      "tracking": {
+        "title": "进度跟踪",
+        "description": "勾选任务并查看你的成就"
+      }
+    },
+    "cta": {
+      "title": "准备好清空你的思绪了吗？",
+      "subtitle": "免费、开源、无需注册。有意识地开始管理你的时间。",
+      "button": "开始使用清空"
+    },
+    "footer": {
+      "copyright": "© 2025 清空",
+      "madeWith": "Made with speardragon"
+    },
+    "placeholder": {
+      "appPreview": "显示包含收件箱和队列标签的侧边栏以及周队列视图的主仪表板",
+      "comparison": "比较图：传统调度（左）显示中断时会崩溃的固定小时槽。基于队列的方法（右）显示适应变化的灵活任务队列。",
+      "inbox": "收件箱：带时间滑块的快速任务输入、未分配任务列表",
+      "queueDashboard": "队列仪表板：带容量仪表的彩色队列卡片、带复选框的已分配任务",
+      "weeklyView": "周视图：显示队列时间表的彩色时间块的7天日历"
+    }
   }
 }
