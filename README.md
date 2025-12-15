@@ -12,8 +12,8 @@
 > **"비워야 채운다"**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Docker Hub](https://img.shields.io/docker/v/rayhwang/bium?label=Docker%20Hub&logo=docker&logoColor=white)](https://hub.docker.com/r/rayhwang/bium)
-[![Docker Pulls](https://img.shields.io/docker/pulls/rayhwang/bium?logo=docker&logoColor=white)](https://hub.docker.com/r/rayhwang/bium)
+[![Docker Hub](https://img.shields.io/docker/v/speardragon/bium?label=Docker%20Hub&logo=docker&logoColor=white)](https://hub.docker.com/r/speardragon/bium)
+[![Docker Pulls](https://img.shields.io/docker/pulls/speardragon/bium?logo=docker&logoColor=white)](https://hub.docker.com/r/speardragon/bium)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.2-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)](https://reactjs.org/)
 
@@ -49,7 +49,7 @@
 
 ```bash
 # 한 줄로 바로 실행!
-docker run -d -p 80:80 -v bium-data:/app/data --name bium rayhwang/bium:latest
+docker run -d -p 80:80 -v bium-data:/app/data --name bium speardragon/bium:latest
 
 # 브라우저에서 접속
 open http://localhost
@@ -59,7 +59,7 @@ open http://localhost
 
 ```bash
 # docker-compose.yml 파일 다운로드
-curl -O https://raw.githubusercontent.com/rayhwang/bium/main/docker-compose.yml
+curl -O https://raw.githubusercontent.com/speardragon/bium/main/docker-compose.yml
 
 # 실행
 docker-compose up -d
@@ -72,7 +72,7 @@ open http://localhost
 
 ```bash
 # 저장소 클론
-git clone https://github.com/rayhwang/bium.git
+git clone https://github.com/speardragon/bium.git
 cd bium
 
 # Docker 이미지 빌드 및 실행
@@ -86,7 +86,7 @@ open http://localhost
 
 ```bash
 # 저장소 클론
-git clone https://github.com/rayhwang/bium.git
+git clone https://github.com/speardragon/bium.git
 cd bium
 
 # Backend 실행
@@ -119,11 +119,11 @@ docker-compose down
 
 ```bash
 # 최신 이미지 pull
-docker pull rayhwang/bium:latest
+docker pull speardragon/bium:latest
 
 # 컨테이너 재시작
 docker stop bium && docker rm bium
-docker run -d -p 80:80 -v bium-data:/app/data --name bium rayhwang/bium:latest
+docker run -d -p 80:80 -v bium-data:/app/data --name bium speardragon/bium:latest
 ```
 
 ---
