@@ -12,7 +12,8 @@
 > **「清空才能填满」**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![Docker Hub](https://img.shields.io/docker/v/speardragon/bium?label=Docker%20Hub&logo=docker&logoColor=white)](https://hub.docker.com/r/speardragon/bium)
+[![Docker Pulls](https://img.shields.io/docker/pulls/speardragon/bium?logo=docker&logoColor=white)](https://hub.docker.com/r/speardragon/bium)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.2-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)](https://reactjs.org/)
 
@@ -35,6 +36,8 @@
 
 这种视觉反馈直观地展示"时间不够"的事实，帮助你做出**现实的优先级决策**，而不是过度计划。
 
+![截图](../public/screenshot.png)
+
 ---
 
 ## 安装与运行
@@ -44,25 +47,48 @@
 - [Docker](https://www.docker.com/get-started) & Docker Compose
 - 或 Node.js 18+
 
-### 方式 1：使用 Docker 运行（推荐）
+### 方式 1：从 Docker Hub 直接运行（最简单）
+
+```bash
+# 一行命令即可运行！
+docker run -d -p 80:80 -v bium-data:/app/data --name bium speardragon/bium:latest
+
+# 在浏览器中访问
+open http://localhost
+```
+
+### 方式 2：使用 Docker Compose 运行
+
+```bash
+# 下载 docker-compose.yml
+curl -O https://raw.githubusercontent.com/speardragon/bium/main/docker-compose.yml
+
+# 运行
+docker-compose up -d
+
+# 在浏览器中访问
+open http://localhost
+```
+
+### 方式 3：从源码构建
 
 ```bash
 # 克隆仓库
-git clone https://github.com/your-username/bium.git
+git clone https://github.com/speardragon/bium.git
 cd bium
 
-# 使用Docker Compose运行
+# 构建并运行Docker镜像
 docker-compose up --build -d
 
 # 在浏览器中访问
 open http://localhost
 ```
 
-### 方式 2：本地开发环境
+### 方式 4：本地开发环境
 
 ```bash
 # 克隆仓库
-git clone https://github.com/your-username/bium.git
+git clone https://github.com/speardragon/bium.git
 cd bium
 
 # 运行Backend
@@ -83,10 +109,23 @@ open http://localhost:5173
 
 ```bash
 # 使用Docker时
+docker stop bium && docker rm bium
+# 或使用Docker Compose时
 docker-compose down
 
 # 本地运行时
 # 在每个终端中按Ctrl+C
+```
+
+### 更新
+
+```bash
+# 拉取最新镜像
+docker pull speardragon/bium:latest
+
+# 重启容器
+docker stop bium && docker rm bium
+docker run -d -p 80:80 -v bium-data:/app/data --name bium speardragon/bium:latest
 ```
 
 ---

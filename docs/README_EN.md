@@ -12,7 +12,8 @@
 > **"Empty to Fill"**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![Docker Hub](https://img.shields.io/docker/v/speardragon/bium?label=Docker%20Hub&logo=docker&logoColor=white)](https://hub.docker.com/r/speardragon/bium)
+[![Docker Pulls](https://img.shields.io/docker/pulls/speardragon/bium?logo=docker&logoColor=white)](https://hub.docker.com/r/speardragon/bium)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.2-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)](https://reactjs.org/)
 
@@ -35,6 +36,8 @@ In Bium, your day starts with **empty queues**. Each queue is a container with a
 
 This visual feedback intuitively shows that "time is limited," helping you make **realistic priority decisions** instead of overplanning.
 
+![Screenshot](../public/screenshot.png)
+
 ---
 
 ## Installation & Setup
@@ -44,25 +47,48 @@ This visual feedback intuitively shows that "time is limited," helping you make 
 - [Docker](https://www.docker.com/get-started) & Docker Compose
 - Or Node.js 18+
 
-### Option 1: Run with Docker (Recommended)
+### Option 1: Run from Docker Hub (Easiest)
+
+```bash
+# Run with a single command!
+docker run -d -p 80:80 -v bium-data:/app/data --name bium speardragon/bium:latest
+
+# Open in browser
+open http://localhost
+```
+
+### Option 2: Run with Docker Compose
+
+```bash
+# Download docker-compose.yml
+curl -O https://raw.githubusercontent.com/speardragon/bium/main/docker-compose.yml
+
+# Run
+docker-compose up -d
+
+# Open in browser
+open http://localhost
+```
+
+### Option 3: Build from Source
 
 ```bash
 # Clone repository
-git clone https://github.com/your-username/bium.git
+git clone https://github.com/speardragon/bium.git
 cd bium
 
-# Run with Docker Compose
+# Build and run Docker image
 docker-compose up --build -d
 
 # Open in browser
 open http://localhost
 ```
 
-### Option 2: Local Development
+### Option 4: Local Development
 
 ```bash
 # Clone repository
-git clone https://github.com/your-username/bium.git
+git clone https://github.com/speardragon/bium.git
 cd bium
 
 # Start Backend
@@ -83,10 +109,23 @@ open http://localhost:5173
 
 ```bash
 # When using Docker
+docker stop bium && docker rm bium
+# Or when using Docker Compose
 docker-compose down
 
 # When running locally
 # Press Ctrl+C in each terminal
+```
+
+### Update
+
+```bash
+# Pull latest image
+docker pull speardragon/bium:latest
+
+# Restart container
+docker stop bium && docker rm bium
+docker run -d -p 80:80 -v bium-data:/app/data --name bium speardragon/bium:latest
 ```
 
 ---

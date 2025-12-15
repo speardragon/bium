@@ -89,11 +89,15 @@ function FloatingElement({ children, className = "", delay = 0 }: { children?: R
   );
 }
 
-// Placeholder image component
-function PlaceholderImage({ text, className = "" }: { text: string; className?: string }) {
+// Guide image component with proper sizing
+function GuideImage({ src, alt, className = "" }: { src: string; alt: string; className?: string }) {
   return (
-    <div className={`bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl border-2 border-dashed border-gray-300 flex items-center justify-center p-8 ${className}`}>
-      <p className="text-gray-500 text-center text-sm font-medium">{text}</p>
+    <div className={`overflow-hidden rounded-2xl shadow-lg ${className}`}>
+      <img 
+        src={src} 
+        alt={alt} 
+        className="w-full h-full object-contain"
+      />
     </div>
   );
 }
@@ -302,15 +306,16 @@ export function GuidePage() {
             </button>
           </div>
 
-          {/* Hero Image Placeholder */}
+          {/* Hero Image */}
           <div 
             className="relative max-w-4xl mx-auto"
             style={{ animation: 'fadeIn 1s ease-out 1s both' }}
           >
             <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent z-10 pointer-events-none" />
-            <PlaceholderImage 
-              text={t("guide.placeholder.appPreview", "Main dashboard showing weekly queue view with sidebar containing Inbox and Queue tabs")}
-              className="aspect-video shadow-2xl"
+            <GuideImage 
+              src="/guide-1.png"
+              alt={t("guide.placeholder.appPreview", "Main dashboard showing weekly queue view with sidebar containing Inbox and Queue tabs")}
+              className="shadow-2xl"
             />
           </div>
         </div>
@@ -456,9 +461,10 @@ export function GuidePage() {
           </div>
 
           <AnimatedSection delay={600}>
-            <PlaceholderImage 
-              text={t("guide.placeholder.comparison", "Comparison diagram: Traditional scheduling (left) shows rigid hourly slots that break when disrupted. Queue-based approach (right) shows flexible task queues that adapt to changes.")}
-              className="max-w-4xl mx-auto aspect-[16/9]"
+            <GuideImage 
+              src="/guide-2.png"
+              alt={t("guide.placeholder.comparison", "Comparison diagram: Traditional scheduling (left) shows rigid hourly slots that break when disrupted. Queue-based approach (right) shows flexible task queues that adapt to changes.")}
+              className="max-w-4xl mx-auto"
             />
           </AnimatedSection>
         </div>
@@ -494,9 +500,9 @@ export function GuidePage() {
                 <p className="text-gray-600 mb-6">
                   {t("guide.howItWorks.step1.description", "Quickly add tasks to your Inbox with time estimates. Don't worry about when - just capture everything.")}
                 </p>
-                <PlaceholderImage 
-                  text={t("guide.placeholder.inbox", "Inbox UI: Quick task entry with time slider, list of unassigned tasks")}
-                  className="aspect-[4/3]"
+                <GuideImage 
+                  src="/guide-3.png"
+                  alt={t("guide.placeholder.inbox", "Inbox UI: Quick task entry with time slider, list of unassigned tasks")}
                 />
               </div>
             </AnimatedSection>
@@ -518,9 +524,9 @@ export function GuidePage() {
                 <p className="text-gray-600 mb-6">
                   {t("guide.howItWorks.step2.description", "Move tasks to appropriate queues. Deep Work, Admin, Creative - organize by the type of focus needed.")}
                 </p>
-                <PlaceholderImage 
-                  text={t("guide.placeholder.queueDashboard", "Queue Dashboard: Colored queue cards with capacity gauges, assigned tasks with checkboxes")}
-                  className="aspect-[4/3]"
+                <GuideImage 
+                  src="/guide-4.png"
+                  alt={t("guide.placeholder.queueDashboard", "Queue Dashboard: Colored queue cards with capacity gauges, assigned tasks with checkboxes")}
                 />
               </div>
             </AnimatedSection>
@@ -542,9 +548,9 @@ export function GuidePage() {
                 <p className="text-gray-600 mb-6">
                   {t("guide.howItWorks.step3.description", "When a time block arrives, work through your queue. Check off tasks as you complete them.")}
                 </p>
-                <PlaceholderImage 
-                  text={t("guide.placeholder.weeklyView", "Weekly View: 7-day calendar with colored time blocks showing queue schedules")}
-                  className="aspect-[4/3]"
+                <GuideImage 
+                  src="/guide-5.png"
+                  alt={t("guide.placeholder.weeklyView", "Weekly View: 7-day calendar with colored time blocks showing queue schedules")}
                 />
               </div>
             </AnimatedSection>
