@@ -1,0 +1,45 @@
+version: "3.8"
+
+# Development docker-compose with hot-reload support
+# Usage: docker-compose -f docker-compose.dev.yml up
+
+services:
+  # --------------------
+  # Backend Service (Node.js/Express) - Development
+  # --------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: bium-backend-dev
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/data:/app/data
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DATA_PATH=/app/data
+    command: npm run dev
+
+  # --------------------
+  # Frontend Service (React/Vite) - Development
+  # --------------------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: bium-frontend-dev
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+    environment:
+      - VITE_API_URL=http://localhost:3000/api
+    depends_on:
+      - backend
+    command: npm run dev -- --host

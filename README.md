@@ -12,7 +12,8 @@
 > **"비워야 채운다"**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![Docker Hub](https://img.shields.io/docker/v/rayhwang/bium?label=Docker%20Hub&logo=docker&logoColor=white)](https://hub.docker.com/r/rayhwang/bium)
+[![Docker Pulls](https://img.shields.io/docker/pulls/rayhwang/bium?logo=docker&logoColor=white)](https://hub.docker.com/r/rayhwang/bium)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.2-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)](https://reactjs.org/)
 
@@ -44,25 +45,48 @@
 - [Docker](https://www.docker.com/get-started) & Docker Compose
 - 또는 Node.js 18+
 
-### 방법 1: Docker로 실행 (권장)
+### 방법 1: Docker Hub에서 바로 실행 (가장 쉬움)
+
+```bash
+# 한 줄로 바로 실행!
+docker run -d -p 80:80 -v bium-data:/app/data --name bium rayhwang/bium:latest
+
+# 브라우저에서 접속
+open http://localhost
+```
+
+### 방법 2: Docker Compose로 실행
+
+```bash
+# docker-compose.yml 파일 다운로드
+curl -O https://raw.githubusercontent.com/rayhwang/bium/main/docker-compose.yml
+
+# 실행
+docker-compose up -d
+
+# 브라우저에서 접속
+open http://localhost
+```
+
+### 방법 3: 소스에서 빌드
 
 ```bash
 # 저장소 클론
-git clone https://github.com/your-username/bium.git
+git clone https://github.com/rayhwang/bium.git
 cd bium
 
-# Docker Compose로 실행
+# Docker 이미지 빌드 및 실행
 docker-compose up --build -d
 
 # 브라우저에서 접속
 open http://localhost
 ```
 
-### 방법 2: 로컬 개발 환경
+### 방법 4: 로컬 개발 환경
 
 ```bash
 # 저장소 클론
-git clone https://github.com/your-username/bium.git
+git clone https://github.com/rayhwang/bium.git
 cd bium
 
 # Backend 실행
@@ -83,10 +107,23 @@ open http://localhost:5173
 
 ```bash
 # Docker 사용 시
+docker stop bium && docker rm bium
+# 또는 Docker Compose 사용 시
 docker-compose down
 
 # 로컬 실행 시
 # 각 터미널에서 Ctrl+C
+```
+
+### 업데이트
+
+```bash
+# 최신 이미지 pull
+docker pull rayhwang/bium:latest
+
+# 컨테이너 재시작
+docker stop bium && docker rm bium
+docker run -d -p 80:80 -v bium-data:/app/data --name bium rayhwang/bium:latest
 ```
 
 ---

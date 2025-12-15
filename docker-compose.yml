@@ -1,37 +1,28 @@
 version: "3.8"
 
-services:
-  # --------------------
-  # Backend Service (Node.js/Express)
-  # --------------------
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: bium-backend
-    restart: always
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./backend/src:/app/src
-      - ./backend/data:/app/data
-    environment:
-      - NODE_ENV=${NODE_ENV}
-      - PORT=${PORT}
-      - DATA_PATH=${DATA_PATH}
+# Production docker-compose for pulling from Docker Hub
+# Usage: docker-compose up -d
 
-  # --------------------
-  # Frontend Service (React/Vite/Nginx)
-  # --------------------
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: bium-frontend
-    restart: always
+services:
+  bium:
+    image: rayhwang/bium:latest
+    container_name: bium
+    restart: unless-stopped
     ports:
       - "80:80"
-    depends_on:
-      - backend
+    volumes:
+      - bium-data:/app/data
     environment:
-      - VITE_API_URL=http://localhost:3000/api
+      - NODE_ENV=production
+      - PORT=3000
+      - DATA_PATH=/app/data
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  bium-data:
+    driver: local
