@@ -31,7 +31,13 @@
   "weeklyPlan": {
     "title": "Weekly Plan View",
     "emptyAllQueues": "Empty All Queues",
-    "noQueues": "No queues"
+    "noQueues": "No queues",
+    "editMode": "Edit",
+    "doneEditing": "Done",
+    "editModeHint": "Drag queues to move them between days. Click a queue to edit its details. Click '+' to add a queue.",
+    "addQueue": "Add",
+    "dropHere": "Drop here",
+    "noQueuesEdit": "No queues"
   },
   "queue": {
     "capacity": "Capacity",
@@ -42,7 +48,26 @@
     "addTask": "Add Task",
     "selectFromInbox": "Select a task from Inbox",
     "noInboxTasks": "No tasks in inbox",
-    "addFromInbox": "Add from Inbox"
+    "addFromInbox": "Add from Inbox",
+    "tasks": "tasks"
+  },
+  "editQueue": {
+    "name": "Queue Name",
+    "affectsAllDays": "affects all days",
+    "namePlaceholder": "Enter queue name",
+    "color": "Color",
+    "time": "Time",
+    "thisDayOnly": "this day only",
+    "invalidTime": "End time must be after start time",
+    "removeFromDay": "Remove from this day",
+    "confirmDelete": "Are you sure?"
+  },
+  "addQueue": {
+    "title": "Add Queue",
+    "selectQueue": "Select Queue",
+    "noQueues": "No queues available. Create one first in the Queues tab.",
+    "time": "Time",
+    "add": "Add"
   },
   "common": {
     "monday": "Mon",

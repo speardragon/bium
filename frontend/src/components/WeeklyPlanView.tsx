@@ -1,13 +1,54 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  closestCenter,
+} from "@dnd-kit/core";
 import { useStore } from "../store/useStore";
 import { QueueCard } from "./QueueCard";
+import { AddQueuePopover } from "./AddQueuePopover";
 import { getWeekDates } from "../utils";
 import { Queue, QueueTemplate, Task } from "../types";
+import { Pencil, Check, Plus, RefreshCw } from "lucide-react";
 
 export function WeeklyPlanView() {
   const { t } = useTranslation();
-  const { queues, queueTemplates, tasks, emptyAllQueues } = useStore();
+  const {
+    queues,
+    queueTemplates,
+    tasks,
+    emptyAllQueues,
+    isEditMode,
+    setEditMode,
+    updateQueueTemplate,
+  } = useStore();
   const weekDates = getWeekDates();
+
+  // Drag state
+  const [activeTemplate, setActiveTemplate] = useState<QueueTemplate | null>(null);
+  const [activeQueue, setActiveQueue] = useState<Queue | null>(null);
+
+  // Add queue popover state
+  const [addPopoverDay, setAddPopoverDay] = useState<{
+    dayOfWeek: number;
+    dayName: string;
+    anchorEl: HTMLElement;
+  } | null>(null);
+
+  // Sensors for drag and drop
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  );
 
   // Map day names to translation keys
   const dayNameKeys: { [key: string]: string } = {
@@ -22,7 +63,9 @@ export function WeeklyPlanView() {
 
   // Get queue templates for a specific day of week
   const getTemplatesForDay = (dayOfWeek: number): QueueTemplate[] => {
-    return queueTemplates.filter((qt) => qt.dayOfWeek === dayOfWeek);
+    return queueTemplates
+      .filter((qt) => qt.dayOfWeek === dayOfWeek)
+      .sort((a, b) => a.startTime.localeCompare(b.startTime));
   };
 
   // Get queue by id
@@ -37,75 +80,247 @@ export function WeeklyPlanView() {
       .sort((a, b) => a.title.localeCompare(b.title));
   };
 
+  // Handle drag start
+  const handleDragStart = (event: DragStartEvent) => {
+    const { active } = event;
+    const templateId = active.id as string;
+    const template = queueTemplates.find((qt) => qt.id === templateId);
+    if (template) {
+      setActiveTemplate(template);
+      const queue = getQueueById(template.queueId);
+      setActiveQueue(queue || null);
+    }
+  };
+
+  // Handle drag end
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    setActiveTemplate(null);
+    setActiveQueue(null);
+
+    if (!over) return;
+
+    const templateId = active.id as string;
+    const targetDayOfWeek = parseInt(over.id as string);
+
+    const template = queueTemplates.find((qt) => qt.id === templateId);
+    if (!template || template.dayOfWeek === targetDayOfWeek) return;
+
+    // Update the template's day of week
+    await updateQueueTemplate(templateId, { dayOfWeek: targetDayOfWeek });
+  };
+
+  // Handle add queue button click
+  const handleAddQueueClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    dayOfWeek: number,
+    dayName: string
+  ) => {
+    setAddPopoverDay({
+      dayOfWeek,
+      dayName,
+      anchorEl: event.currentTarget,
+    });
+  };
+
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white">
         <h1 className="text-xl font-bold text-gray-800">{t("weeklyPlan.title")}</h1>
-        <button
-          onClick={emptyAllQueues}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 
-                   bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
-            viewBox="0 0 20 20"
-            fill="currentColor"
+        <div className="flex items-center gap-2">
+          {/* Edit Mode Toggle */}
+          <button
+            onClick={() => setEditMode(!isEditMode)}
+            className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+              isEditMode
+                ? "bg-blue-500 text-white hover:bg-blue-600"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
           >
-            <path
-              fillRule="evenodd"
-              d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
-              clipRule="evenodd"
-            />
-          </svg>
-          {t("weeklyPlan.emptyAllQueues")}
-        </button>
-      </div>
+            {isEditMode ? (
+              <>
+                <Check className="w-4 h-4" />
+                {t("weeklyPlan.doneEditing", "Done")}
+              </>
+            ) : (
+              <>
+                <Pencil className="w-4 h-4" />
+                {t("weeklyPlan.editMode", "Edit")}
+              </>
+            )}
+          </button>
 
-      {/* Week Grid */}
-      <div className="flex-1 overflow-auto p-4">
-        <div className="grid grid-cols-5 gap-4 min-w-[800px]">
-          {weekDates.map(({ date, dayOfWeek, dayName }) => {
-            const dayTemplates = getTemplatesForDay(dayOfWeek);
-            const translatedDayName = t(dayNameKeys[dayName] || dayName);
-
-            return (
-              <div key={date} className="flex flex-col">
-                {/* Day Header */}
-                <div className="text-center py-2 mb-3 border-b-2 border-gray-200">
-                  <span className="text-sm font-bold text-gray-700">
-                    {translatedDayName}
-                  </span>
-                </div>
-
-                {/* Queues for this day */}
-                <div className="space-y-3">
-                  {dayTemplates.length === 0 ? (
-                    <div className="p-4 text-center text-gray-400 text-sm border-2 border-dashed border-gray-200 rounded-lg">
-                      {t("weeklyPlan.noQueues")}
-                    </div>
-                  ) : (
-                    dayTemplates.map((template) => {
-                      const queue = getQueueById(template.queueId);
-                      if (!queue) return null;
-
-                      return (
-                        <QueueCard
-                          key={template.id}
-                          queue={queue}
-                          template={template}
-                          tasks={getQueueTasks(queue.id)}
-                        />
-                      );
-                    })
-                  )}
-                </div>
-              </div>
-            );
-          })}
+          {/* Empty All Queues */}
+          <button
+            onClick={emptyAllQueues}
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 
+                     bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+          >
+            <RefreshCw className="w-4 h-4" />
+            {t("weeklyPlan.emptyAllQueues")}
+          </button>
         </div>
       </div>
+
+      {/* Edit Mode Banner */}
+      {isEditMode && (
+        <div className="px-6 py-2 bg-blue-50 border-b border-blue-100">
+          <p className="text-sm text-blue-700">
+            {t(
+              "weeklyPlan.editModeHint",
+              "Drag queues to move them between days. Click a queue to edit its details. Click '+' to add a queue."
+            )}
+          </p>
+        </div>
+      )}
+
+      {/* Week Grid */}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
+        <div className="flex-1 overflow-y-auto overflow-x-auto p-4">
+          <div className="grid grid-cols-5 gap-4 min-w-[800px]">
+            {weekDates.map(({ date, dayOfWeek, dayName }) => {
+              const dayTemplates = getTemplatesForDay(dayOfWeek);
+              const translatedDayName = t(dayNameKeys[dayName] || dayName);
+
+              return (
+                <DayColumn
+                  key={date}
+                  dayOfWeek={dayOfWeek}
+                  dayName={translatedDayName}
+                  templates={dayTemplates}
+                  getQueueById={getQueueById}
+                  getQueueTasks={getQueueTasks}
+                  isEditMode={isEditMode}
+                  onAddClick={(e) => handleAddQueueClick(e, dayOfWeek, translatedDayName)}
+                />
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Drag Overlay */}
+        <DragOverlay>
+          {activeTemplate && activeQueue && (
+            <div className="opacity-80">
+              <QueueCard
+                queue={activeQueue}
+                template={activeTemplate}
+                tasks={getQueueTasks(activeQueue.id)}
+                isEditMode={true}
+                isDragging={true}
+              />
+            </div>
+          )}
+        </DragOverlay>
+      </DndContext>
+
+      {/* Add Queue Popover */}
+      {addPopoverDay && (
+        <AddQueuePopover
+          dayOfWeek={addPopoverDay.dayOfWeek}
+          dayName={addPopoverDay.dayName}
+          anchorEl={addPopoverDay.anchorEl}
+          onClose={() => setAddPopoverDay(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+// Day Column Component (for droppable area)
+import { useDroppable } from "@dnd-kit/core";
+
+interface DayColumnProps {
+  dayOfWeek: number;
+  dayName: string;
+  templates: QueueTemplate[];
+  getQueueById: (queueId: string) => Queue | undefined;
+  getQueueTasks: (queueId: string) => Task[];
+  isEditMode: boolean;
+  onAddClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+}
+
+function DayColumn({
+  dayOfWeek,
+  dayName,
+  templates,
+  getQueueById,
+  getQueueTasks,
+  isEditMode,
+  onAddClick,
+}: DayColumnProps) {
+  const { t } = useTranslation();
+  const { setNodeRef, isOver } = useDroppable({
+    id: dayOfWeek.toString(),
+  });
+
+  return (
+    <div
+      ref={setNodeRef}
+      className={`flex flex-col min-h-[200px] transition-colors rounded-lg ${
+        isOver && isEditMode ? "bg-blue-50" : ""
+      }`}
+    >
+      {/* Day Header */}
+      <div className="text-center py-2 mb-3 border-b-2 border-gray-200">
+        <span className="text-sm font-bold text-gray-700">{dayName}</span>
+      </div>
+
+      {/* Queues for this day */}
+      <div className="space-y-3 flex-1">
+        {templates.length === 0 && !isEditMode && (
+          <div className="p-4 text-center text-gray-400 text-sm border-2 border-dashed border-gray-200 rounded-lg">
+            {t("weeklyPlan.noQueues")}
+          </div>
+        )}
+
+        {templates.length === 0 && isEditMode && (
+          <div
+            className={`p-4 text-center text-sm border-2 border-dashed rounded-lg transition-colors ${
+              isOver ? "border-blue-400 bg-blue-50 text-blue-500" : "border-gray-300 text-gray-400"
+            }`}
+          >
+            {isOver
+              ? t("weeklyPlan.dropHere", "Drop here")
+              : t("weeklyPlan.noQueuesEdit", "No queues")}
+          </div>
+        )}
+
+        {templates.map((template) => {
+          const queue = getQueueById(template.queueId);
+          if (!queue) return null;
+
+          return (
+            <QueueCard
+              key={template.id}
+              queue={queue}
+              template={template}
+              tasks={getQueueTasks(queue.id)}
+              isEditMode={isEditMode}
+            />
+          );
+        })}
+      </div>
+
+      {/* Add Queue Button (Edit Mode Only) */}
+      {isEditMode && (
+        <button
+          onClick={onAddClick}
+          className="mt-3 flex items-center justify-center gap-1 py-2 text-sm text-gray-500 
+                   border-2 border-dashed border-gray-300 rounded-lg
+                   hover:border-blue-400 hover:text-blue-500 hover:bg-blue-50 transition-colors"
+        >
+          <Plus className="w-4 h-4" />
+          {t("weeklyPlan.addQueue", "Add")}
+        </button>
+      )}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
-import { Check, ChevronDown, ChevronUp } from "lucide-react";
+import { useState, useRef } from "react";
+import { Check, ChevronDown, ChevronUp, GripVertical, Pencil } from "lucide-react";
+import { useDraggable } from "@dnd-kit/core";
 import { Queue, QueueTemplate, Task } from "../types";
 import {
   calculateDuration,
@@ -10,21 +11,39 @@ import {
   getFillColor,
 } from "../utils";
 import { useStore } from "../store/useStore";
+import { QueueEditPopover } from "./QueueEditPopover";
 
 interface QueueCardProps {
   queue: Queue;
   template: QueueTemplate;
   tasks: Task[];
+  isEditMode?: boolean;
+  isDragging?: boolean;
 }
 
 // Base height per hour (in pixels)
 const HEIGHT_PER_HOUR = 80;
 const HEADER_HEIGHT = 60;
+const EDIT_MODE_HEIGHT = 80;
 
-export function QueueCard({ queue, template, tasks }: QueueCardProps) {
+export function QueueCard({ queue, template, tasks, isEditMode = false, isDragging = false }: QueueCardProps) {
   const { t } = useTranslation();
   const { completeTask, uncompleteTask } = useStore();
   const [showCompleted, setShowCompleted] = useState(false);
+  const [showEditPopover, setShowEditPopover] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Draggable setup
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: template.id,
+    disabled: !isEditMode,
+  });
+
+  const style = transform
+    ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+      }
+    : undefined;
 
   // Separate active and completed tasks
   const activeTasks = tasks.filter((t) => t.status !== "completed");
@@ -39,8 +58,10 @@ export function QueueCard({ queue, template, tasks }: QueueCardProps) {
   const fillColor = getFillColor(fillStatus);
   const isOverfilled = fillPercentage > 100;
 
-  // Calculate height based on capacity (totalMinutes)
-  const cardHeight = HEADER_HEIGHT + (totalMinutes / 60) * HEIGHT_PER_HOUR;
+  // Calculate height based on mode
+  const cardHeight = isEditMode
+    ? EDIT_MODE_HEIGHT
+    : HEADER_HEIGHT + (totalMinutes / 60) * HEIGHT_PER_HOUR;
 
   // Format time display
   const timeDisplay = `${template.startTime.replace(
@@ -56,8 +77,95 @@ export function QueueCard({ queue, template, tasks }: QueueCardProps) {
     }
   };
 
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowEditPopover(true);
+  };
+
+  // Edit Mode: Simplified card with drag handle
+  if (isEditMode) {
+    return (
+      <>
+        <div
+          ref={(node) => {
+            setNodeRef(node);
+            (cardRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+          }}
+          style={style}
+          className={`
+            relative rounded-lg border-2 transition-all duration-200 overflow-hidden
+            ${isDragging ? "shadow-lg ring-2 ring-blue-400" : ""}
+            border-solid hover:border-blue-400 cursor-grab active:cursor-grabbing
+          `}
+          {...attributes}
+          {...listeners}
+        >
+          {/* Background */}
+          <div
+            className="absolute inset-0"
+            style={{ backgroundColor: `${queue.color}15` }}
+          />
+
+          {/* Content */}
+          <div className="relative z-10 p-3">
+            <div className="flex items-center gap-2">
+              {/* Drag Handle */}
+              <GripVertical className="w-4 h-4 text-gray-400 flex-shrink-0" />
+
+              {/* Color indicator */}
+              <div
+                className="w-3 h-3 rounded-full flex-shrink-0"
+                style={{ backgroundColor: queue.color }}
+              />
+
+              {/* Queue info */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-semibold text-gray-800 truncate">
+                    {queue.title}
+                  </span>
+                  <span className="text-xs text-gray-500 ml-2">{timeDisplay}</span>
+                </div>
+                <div className="text-xs text-gray-500 mt-0.5">
+                  {formatDuration(totalMinutes)} · {activeTasks.length} {t("queue.tasks", "tasks")}
+                </div>
+              </div>
+
+              {/* Edit Button */}
+              <button
+                onClick={handleEditClick}
+                onPointerDown={(e) => e.stopPropagation()}
+                className="p-1.5 rounded-md hover:bg-gray-200 transition-colors flex-shrink-0"
+              >
+                <Pencil className="w-4 h-4 text-gray-500" />
+              </button>
+            </div>
+          </div>
+
+          {/* Border color indicator */}
+          <div
+            className="absolute left-0 top-0 bottom-0 w-1"
+            style={{ backgroundColor: queue.color }}
+          />
+        </div>
+
+        {/* Edit Popover */}
+        {showEditPopover && (
+          <QueueEditPopover
+            queue={queue}
+            template={template}
+            anchorEl={cardRef.current}
+            onClose={() => setShowEditPopover(false)}
+          />
+        )}
+      </>
+    );
+  }
+
+  // Normal Mode: Full card with tasks
   return (
     <div
+      ref={cardRef}
       className={`
         relative rounded-lg border-2 transition-all duration-200 overflow-hidden
         ${

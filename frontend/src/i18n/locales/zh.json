@@ -31,7 +31,13 @@
   "weeklyPlan": {
     "title": "周计划",
     "emptyAllQueues": "清空所有队列",
-    "noQueues": "没有队列"
+    "noQueues": "没有队列",
+    "editMode": "编辑",
+    "doneEditing": "完成",
+    "editModeHint": "拖动队列在不同日期之间移动。点击队列编辑其详细信息。点击\"+\"添加队列。",
+    "addQueue": "添加",
+    "dropHere": "放在这里",
+    "noQueuesEdit": "没有队列"
   },
   "queue": {
     "capacity": "容量",
@@ -42,7 +48,26 @@
     "addTask": "添加任务",
     "selectFromInbox": "从收件箱选择任务",
     "noInboxTasks": "收件箱中没有任务",
-    "addFromInbox": "从收件箱添加"
+    "addFromInbox": "从收件箱添加",
+    "tasks": "个任务"
+  },
+  "editQueue": {
+    "name": "队列名称",
+    "affectsAllDays": "影响所有日期",
+    "namePlaceholder": "输入队列名称",
+    "color": "颜色",
+    "time": "时间",
+    "thisDayOnly": "仅此日期",
+    "invalidTime": "结束时间必须在开始时间之后",
+    "removeFromDay": "从此日期移除",
+    "confirmDelete": "确定要移除吗？"
+  },
+  "addQueue": {
+    "title": "添加队列",
+    "selectQueue": "选择队列",
+    "noQueues": "没有可用的队列。请先在队列标签中创建一个。",
+    "time": "时间",
+    "add": "添加"
   },
   "common": {
     "monday": "周一",

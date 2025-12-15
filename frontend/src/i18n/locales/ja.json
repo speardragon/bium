@@ -31,7 +31,13 @@
   "weeklyPlan": {
     "title": "週間計画",
     "emptyAllQueues": "すべてのキューを空にする",
-    "noQueues": "キューなし"
+    "noQueues": "キューなし",
+    "editMode": "編集",
+    "doneEditing": "完了",
+    "editModeHint": "キューをドラッグして曜日間を移動できます。キューをクリックして詳細を編集できます。「+」をクリックしてキューを追加できます。",
+    "addQueue": "追加",
+    "dropHere": "ここにドロップ",
+    "noQueuesEdit": "キューなし"
   },
   "queue": {
     "capacity": "容量",
@@ -42,7 +48,26 @@
     "addTask": "タスクを追加",
     "selectFromInbox": "インボックスからタスクを選択",
     "noInboxTasks": "インボックスにタスクがありません",
-    "addFromInbox": "インボックスから追加"
+    "addFromInbox": "インボックスから追加",
+    "tasks": "件のタスク"
+  },
+  "editQueue": {
+    "name": "キュー名",
+    "affectsAllDays": "すべての曜日に適用",
+    "namePlaceholder": "キュー名を入力",
+    "color": "色",
+    "time": "時間",
+    "thisDayOnly": "この曜日のみ",
+    "invalidTime": "終了時間は開始時間より後である必要があります",
+    "removeFromDay": "この曜日から削除",
+    "confirmDelete": "本当に削除しますか？"
+  },
+  "addQueue": {
+    "title": "キューを追加",
+    "selectQueue": "キューを選択",
+    "noQueues": "利用可能なキューがありません。まずキュータブでキューを作成してください。",
+    "time": "時間",
+    "add": "追加"
   },
   "common": {
     "monday": "月",

@@ -15,6 +15,7 @@ interface AppState {
   sidebarWidth: number;
   sidebarCollapsed: boolean;
   activeTab: 'inbox' | 'queues';
+  isEditMode: boolean;
   
   // Loading states
   isLoading: boolean;
@@ -46,6 +47,7 @@ interface AppState {
   
   // Actions - Queue Templates
   addQueueTemplate: (queueId: string, dayOfWeek: number, startTime: string, endTime: string) => Promise<void>;
+  updateQueueTemplate: (templateId: string, updates: Partial<Omit<QueueTemplate, 'id'>>) => Promise<void>;
   deleteQueueTemplate: (templateId: string) => Promise<void>;
   
   // Actions - Settings
@@ -55,6 +57,7 @@ interface AppState {
   setSidebarWidth: (width: number) => void;
   setSidebarCollapsed: (collapsed: boolean) => void;
   setActiveTab: (tab: 'inbox' | 'queues') => void;
+  setEditMode: (isEditMode: boolean) => void;
 }
 
 // Load sidebar state from localStorage
@@ -92,6 +95,7 @@ export const useStore = create<AppState>((set, get) => ({
   sidebarWidth: initialSidebarState.width,
   sidebarCollapsed: initialSidebarState.collapsed,
   activeTab: 'inbox',
+  isEditMode: false,
   
   isLoading: false,
   error: null,
@@ -356,6 +360,23 @@ export const useStore = create<AppState>((set, get) => ({
     }
   },
   
+  // Update a queue template
+  updateQueueTemplate: async (templateId: string, updates: Partial<Omit<QueueTemplate, 'id'>>) => {
+    try {
+      const res = await fetch(`${API_URL}/queue-templates/${templateId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates)
+      });
+      const updatedTemplate = await res.json();
+      set(state => ({
+        queueTemplates: state.queueTemplates.map(qt => qt.id === templateId ? updatedTemplate : qt)
+      }));
+    } catch {
+      set({ error: 'Failed to update queue template' });
+    }
+  },
+  
   // Delete a queue template
   deleteQueueTemplate: async (templateId: string) => {
     try {
@@ -398,5 +419,9 @@ export const useStore = create<AppState>((set, get) => ({
   
   setActiveTab: (tab: 'inbox' | 'queues') => {
     set({ activeTab: tab });
+  },
+  
+  setEditMode: (isEditMode: boolean) => {
+    set({ isEditMode });
   },
 }));
