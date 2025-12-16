@@ -1,3 +1,10 @@
+## [0.4.1](https://github.com/speardragon/bium/compare/v0.4.0...v0.4.1) (2025-12-16)
+
+
+### Bug Fixes
+
+* docker push 워크플로 수정 ([0a81a4b](https://github.com/speardragon/bium/commit/0a81a4b546c586bf554b46879456d1224d6fd903))
+
 # [0.4.0](https://github.com/speardragon/bium/compare/v0.3.0...v0.4.0) (2025-12-16)
 
 

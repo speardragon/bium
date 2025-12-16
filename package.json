@@ -1,6 +1,6 @@
 {
   "name": "bium",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "비움 (bium) - Weekly Task Planning App",
   "private": true,
   "scripts": {
