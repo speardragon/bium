@@ -19,6 +19,14 @@
 
 ---
 
+## 灵感来源
+
+本项目灵感来自 unnud 杂志的文章[《时间管理的三阶段进化：为什么要先创建空队列》](https://unnud.com/the-three-stage-evolution-of-time-management-why-you-should-create-an-empty-queue-first/)。
+
+> "时间不是需要填满的空格，而是盛放珍贵事物的容器。正确的顺序是先准备好容器，再选择要放入什么。"
+
+---
+
 ## 项目介绍
 
 **Bium（比乌姆）**是一款以**「时间结构」**为中心而非以任务为中心的日程管理工具。

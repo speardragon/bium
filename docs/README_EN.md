@@ -19,6 +19,14 @@
 
 ---
 
+## Inspiration
+
+This project was inspired by the article ["The Three-Stage Evolution of Time Management: Why You Should Create an Empty Queue First"](https://unnud.com/the-three-stage-evolution-of-time-management-why-you-should-create-an-empty-queue-first/) from unnud Magazine.
+
+> "Time is not an empty slot to fill, but a container to hold precious things. The right order is to prepare good containers first, then choose what to put in them."
+
+---
+
 ## About
 
 **Bium** is a scheduling tool that focuses on **'time structure'** rather than tasks.

@@ -160,6 +160,13 @@
       "subtitle": "免费、开源、无需注册。有意识地开始管理你的时间。",
       "button": "开始使用清空"
     },
+    "inspiration": {
+      "title": "灵感来源",
+      "description": "本项目灵感来自以下文章：",
+      "articleTitle": "时间管理的三阶段进化：为什么要先创建空队列",
+      "quote": "时间不是需要填满的空格，而是盛放珍贵事物的容器。正确的顺序是先准备好容器，再选择要放入什么。",
+      "source": "unnud 杂志"
+    },
     "footer": {
       "copyright": "© 2025 清空",
       "madeWith": "Made with speardragon"

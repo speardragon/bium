@@ -160,6 +160,13 @@
       "subtitle": "무료, 오픈 소스, 회원가입 불필요. 의도를 가지고 시간을 관리하세요.",
       "button": "비움 시작하기"
     },
+    "inspiration": {
+      "title": "영감",
+      "description": "이 프로젝트는 다음 글에서 영감을 받아 만들어졌습니다:",
+      "articleTitle": "시간 관리의 세 단계 진화: 왜 빈 큐를 먼저 만들어야 하는가",
+      "quote": "시간은 채워야 할 빈 칸이 아니라, 소중한 것을 담는 그릇입니다. 좋은 그릇을 먼저 준비하고, 그 다음에 담을 것을 고르는 게 순서입니다.",
+      "source": "unnud 매거진"
+    },
     "footer": {
       "copyright": "© 2025 비움",
       "madeWith": "Made with speardragon"

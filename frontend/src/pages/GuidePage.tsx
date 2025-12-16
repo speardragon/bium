@@ -608,6 +608,54 @@ export function GuidePage() {
         </div>
       </section>
 
+      {/* Inspiration Section */}
+      <section className="py-24 bg-white relative">
+        <div className="max-w-4xl mx-auto px-6">
+          <AnimatedSection className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              {t("guide.inspiration.title", "Inspiration")}
+            </h2>
+            <p className="text-gray-600">
+              {t("guide.inspiration.description", "This project was inspired by the following article:")}
+            </p>
+          </AnimatedSection>
+
+          <AnimatedSection delay={200}>
+            <a
+              href="https://unnud.com/the-three-stage-evolution-of-time-management-why-you-should-create-an-empty-queue-first/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block group"
+            >
+              <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-8 md:p-12 border border-gray-200 hover:border-gray-300 hover:shadow-xl transition-all duration-300">
+                <div className="flex items-start gap-4 mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-amber-500/25">
+                    <Sparkles className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">{t("guide.inspiration.source", "unnud Magazine")}</p>
+                    <h3 className="text-xl md:text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                      {t("guide.inspiration.articleTitle", "The Three-Stage Evolution of Time Management: Why You Should Create an Empty Queue First")}
+                    </h3>
+                  </div>
+                </div>
+                
+                <blockquote className="relative pl-6 border-l-4 border-blue-500">
+                  <p className="text-lg text-gray-600 italic leading-relaxed">
+                    "{t("guide.inspiration.quote", "Time is not an empty slot to fill, but a container to hold precious things. The right order is to prepare good containers first, then choose what to put in them.")}"
+                  </p>
+                </blockquote>
+
+                <div className="mt-6 flex items-center gap-2 text-blue-600 font-medium">
+                  <span>{t("guide.hero.learnMore", "Learn More")}</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            </a>
+          </AnimatedSection>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-32 relative overflow-hidden">
         {/* Animated gradient background */}

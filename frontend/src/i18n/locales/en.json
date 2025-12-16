@@ -160,6 +160,13 @@
       "subtitle": "Free, open source, no sign-up required. Start organizing your time with intention.",
       "button": "Start Using bium"
     },
+    "inspiration": {
+      "title": "Inspiration",
+      "description": "This project was inspired by the following article:",
+      "articleTitle": "The Three-Stage Evolution of Time Management: Why You Should Create an Empty Queue First",
+      "quote": "Time is not an empty slot to fill, but a container to hold precious things. The right order is to prepare good containers first, then choose what to put in them.",
+      "source": "unnud Magazine"
+    },
     "footer": {
       "copyright": "© 2025 bium",
       "madeWith": "Made with speardragon"
