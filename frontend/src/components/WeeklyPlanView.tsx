@@ -185,7 +185,7 @@ export function WeeklyPlanView() {
       >
         <div className="flex-1 overflow-y-auto overflow-x-auto p-4">
           <div className="grid grid-cols-5 gap-4 min-w-[800px]">
-            {weekDates.map(({ date, dayOfWeek, dayName }) => {
+            {weekDates.map(({ date, dayOfWeek, dayName, isToday }) => {
               const dayTemplates = getTemplatesForDay(dayOfWeek);
               const translatedDayName = t(dayNameKeys[dayName] || dayName);
 
@@ -198,6 +198,7 @@ export function WeeklyPlanView() {
                   getQueueById={getQueueById}
                   getQueueTasks={getQueueTasks}
                   isEditMode={isEditMode}
+                  isToday={isToday}
                   onAddClick={(e) => handleAddQueueClick(e, dayOfWeek, translatedDayName)}
                 />
               );
@@ -244,6 +245,7 @@ interface DayColumnProps {
   getQueueById: (queueId: string) => Queue | undefined;
   getQueueTasks: (queueId: string) => Task[];
   isEditMode: boolean;
+  isToday: boolean;
   onAddClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
@@ -254,6 +256,7 @@ function DayColumn({
   getQueueById,
   getQueueTasks,
   isEditMode,
+  isToday,
   onAddClick,
 }: DayColumnProps) {
   const { t } = useTranslation();
@@ -266,11 +269,16 @@ function DayColumn({
       ref={setNodeRef}
       className={`flex flex-col min-h-[200px] transition-colors rounded-lg ${
         isOver && isEditMode ? "bg-blue-50" : ""
-      }`}
+      } ${isToday ? "bg-blue-50/50" : ""}`}
     >
       {/* Day Header */}
-      <div className="text-center py-2 mb-3 border-b-2 border-gray-200">
-        <span className="text-sm font-bold text-gray-700">{dayName}</span>
+      <div className={`text-center py-2 mb-3 border-b-2 ${
+        isToday ? "border-blue-500 bg-blue-500 rounded-t-lg" : "border-gray-200"
+      }`}>
+        <span className={`text-sm font-bold ${isToday ? "text-white" : "text-gray-700"}`}>
+          {dayName}
+          {isToday && <span className="ml-1 text-xs font-normal">({t("common.today", "Today")})</span>}
+        </span>
       </div>
 
       {/* Queues for this day */}

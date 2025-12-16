@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Github, BookOpen, ChevronDown, Check } from "lucide-react";
+import { Github, BookOpen, ChevronDown, Check, Settings } from "lucide-react";
 import { useStore } from "../store/useStore";
 import { SupportedLanguage } from "../types";
+import { ObsidianSettingsModal } from "./ObsidianSettingsModal";
 
 const languages: { code: SupportedLanguage; label: string; flag: string }[] = [
   { code: "ko", label: "한국어", flag: "🇰🇷" },
@@ -15,6 +16,7 @@ export function Header() {
   const { t } = useTranslation();
   const { settings, setLanguage, fetchSettings } = useStore();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isObsidianSettingsOpen, setIsObsidianSettingsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Fetch settings on mount
@@ -88,6 +90,19 @@ export function Header() {
           <Github className="w-5 h-5" />
         </button>
 
+        {/* Obsidian Settings Button */}
+        <button
+          onClick={() => setIsObsidianSettingsOpen(true)}
+          className={`p-2 rounded-lg transition-colors ${
+            settings.obsidianVaultPath 
+              ? 'text-purple-600 hover:text-purple-700 hover:bg-purple-50' 
+              : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100'
+          }`}
+          title={t("obsidian.settings", "Obsidian Settings")}
+        >
+          <Settings className="w-5 h-5" />
+        </button>
+
         {/* Divider */}
         <div className="w-px h-6 bg-gray-200 mx-1" />
 
@@ -125,6 +140,12 @@ export function Header() {
           )}
         </div>
       </div>
+
+      {/* Obsidian Settings Modal */}
+      <ObsidianSettingsModal 
+        isOpen={isObsidianSettingsOpen} 
+        onClose={() => setIsObsidianSettingsOpen(false)} 
+      />
     </header>
   );
 }

@@ -8,8 +8,9 @@ export function getCurrentWeekKey(): string {
 }
 
 // Get dates for current week (Monday to Friday)
-export function getWeekDates(): { date: string; dayOfWeek: number; dayName: string }[] {
+export function getWeekDates(): { date: string; dayOfWeek: number; dayName: string; isToday: boolean }[] {
   const today = new Date();
+  const todayStr = today.toISOString().split('T')[0];
   const currentDay = today.getDay();
   const monday = new Date(today);
   monday.setDate(today.getDate() - (currentDay === 0 ? 6 : currentDay - 1));
@@ -20,10 +21,12 @@ export function getWeekDates(): { date: string; dayOfWeek: number; dayName: stri
   for (let i = 0; i < 5; i++) {
     const date = new Date(monday);
     date.setDate(monday.getDate() + i);
+    const dateStr = date.toISOString().split('T')[0];
     result.push({
-      date: date.toISOString().split('T')[0],
+      date: dateStr,
       dayOfWeek: i + 1, // 1=Monday, 2=Tuesday, etc.
-      dayName: days[i]
+      dayName: days[i],
+      isToday: dateStr === todayStr
     });
   }
   

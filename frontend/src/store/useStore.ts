@@ -52,6 +52,15 @@ interface AppState {
   
   // Actions - Settings
   setLanguage: (language: SupportedLanguage) => Promise<void>;
+  setObsidianVaultPath: (path: string | null) => Promise<void>;
+  setObsidianDefaultFolder: (folder: string | null) => Promise<void>;
+  
+  // Actions - Obsidian
+  fetchObsidianNotes: () => Promise<string[]>;
+  fetchObsidianFolders: () => Promise<string[]>;
+  createObsidianNote: (title: string, folder?: string) => Promise<string | null>;
+  validateObsidianPath: (path: string) => Promise<{ valid: boolean; isObsidianVault?: boolean; error?: string }>;
+  updateTaskObsidianLink: (taskId: string, link: string | null) => Promise<void>;
   
   // Actions - UI
   setSidebarWidth: (width: number) => void;
@@ -89,7 +98,7 @@ export const useStore = create<AppState>((set, get) => ({
   queues: [],
   queueTemplates: [],
   tasks: [],
-  settings: { language: 'en' },
+  settings: { language: 'en', obsidianVaultPath: null, obsidianDefaultFolder: null },
   
   // UI State
   sidebarWidth: initialSidebarState.width,
@@ -403,6 +412,113 @@ export const useStore = create<AppState>((set, get) => ({
       i18n.changeLanguage(language);
     } catch {
       set({ error: 'Failed to update language' });
+    }
+  },
+  
+  // Set Obsidian vault path
+  setObsidianVaultPath: async (path: string | null) => {
+    try {
+      const res = await fetch(`${API_URL}/settings`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ obsidianVaultPath: path })
+      });
+      const settings = await res.json();
+      set({ settings });
+    } catch {
+      set({ error: 'Failed to update Obsidian vault path' });
+    }
+  },
+  
+  // Set Obsidian default folder
+  setObsidianDefaultFolder: async (folder: string | null) => {
+    try {
+      const res = await fetch(`${API_URL}/settings`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ obsidianDefaultFolder: folder })
+      });
+      const settings = await res.json();
+      set({ settings });
+    } catch {
+      set({ error: 'Failed to update Obsidian default folder' });
+    }
+  },
+  
+  // Fetch Obsidian notes
+  fetchObsidianNotes: async () => {
+    try {
+      const res = await fetch(`${API_URL}/obsidian/notes`);
+      if (!res.ok) {
+        return [];
+      }
+      const data = await res.json();
+      return data.notes || [];
+    } catch {
+      return [];
+    }
+  },
+  
+  // Fetch Obsidian folders
+  fetchObsidianFolders: async () => {
+    try {
+      const res = await fetch(`${API_URL}/obsidian/folders`);
+      if (!res.ok) {
+        return [];
+      }
+      const data = await res.json();
+      return data.folders || [];
+    } catch {
+      return [];
+    }
+  },
+  
+  // Create new Obsidian note
+  createObsidianNote: async (title: string, folder?: string) => {
+    try {
+      const res = await fetch(`${API_URL}/obsidian/notes`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, folder })
+      });
+      if (!res.ok) {
+        return null;
+      }
+      const data = await res.json();
+      return data.path || null;
+    } catch {
+      return null;
+    }
+  },
+  
+  // Validate Obsidian path
+  validateObsidianPath: async (path: string) => {
+    try {
+      const res = await fetch(`${API_URL}/obsidian/validate-path`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path })
+      });
+      return await res.json();
+    } catch {
+      return { valid: false, error: 'Failed to validate path' };
+    }
+  },
+  
+  // Update task's Obsidian link
+  updateTaskObsidianLink: async (taskId: string, link: string | null) => {
+    try {
+      const res = await fetch(`${API_URL}/tasks/${taskId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ obsidianLink: link })
+      });
+      const updatedTask = await res.json();
+      set(state => ({
+        tasks: state.tasks.map(t => t.id === taskId ? updatedTask : t)
+      }));
+    } catch {
+      set({ error: 'Failed to update task Obsidian link' });
     }
   },
   

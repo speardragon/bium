@@ -1,19 +1,23 @@
 import { useTranslation } from 'react-i18next';
-import { Check, ChevronDown, ChevronUp, Plus, X } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, Plus, X, FileText } from 'lucide-react';
 import { useState } from 'react';
 import { useStore } from '../store/useStore';
 import { Task, Queue } from '../types';
 import { formatDuration, calculateFillPercentage, getFillStatus } from '../utils';
+import { ObsidianNoteLinkModal } from './ObsidianNoteLinkModal';
 
 interface QueueCardItemProps {
   task: Task;
   onComplete: () => void;
   onUncomplete: () => void;
   onRemove: () => void;
+  onTitleClick: () => void;
 }
 
-function QueueCardItem({ task, onComplete, onUncomplete, onRemove }: QueueCardItemProps) {
+function QueueCardItem({ task, onComplete, onUncomplete, onRemove, onTitleClick }: QueueCardItemProps) {
+  const { t } = useTranslation();
   const isCompleted = task.status === 'completed';
+  const hasObsidianLink = !!task.obsidianLink;
   
   return (
     <div
@@ -37,9 +41,16 @@ function QueueCardItem({ task, onComplete, onUncomplete, onRemove }: QueueCardIt
       >
         {isCompleted && <Check className="w-3 h-3" />}
       </button>
-      <span className={`flex-1 text-sm truncate ${isCompleted ? 'line-through' : ''}`}>
-        {task.title}
-      </span>
+      <button
+        onClick={onTitleClick}
+        className={`flex-1 text-sm truncate text-left hover:text-blue-600 transition-colors flex items-center gap-1 ${
+          isCompleted ? 'line-through' : ''
+        } ${hasObsidianLink ? (isCompleted ? 'text-purple-400' : 'text-purple-700') : ''}`}
+        title={hasObsidianLink ? task.obsidianLink! : t("obsidian.clickToLink", "Click to link to Obsidian note")}
+      >
+        {hasObsidianLink && <FileText className="w-3 h-3 flex-shrink-0" />}
+        <span className="truncate">{task.title}</span>
+      </button>
       <span className={`text-xs px-2 py-0.5 rounded ${isCompleted ? 'bg-gray-200' : 'bg-gray-100'}`}>
         {formatDuration(task.durationMinutes)}
       </span>
@@ -132,6 +143,18 @@ function QueueCard({ queue, tasks, totalMinutes, inboxTasks, onAssignTask }: Que
   const { completeTask, uncompleteTask, unassignTaskFromQueue } = useStore();
   const [showCompleted, setShowCompleted] = useState(true);
   const [showTaskSelector, setShowTaskSelector] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [showNoteLinkModal, setShowNoteLinkModal] = useState(false);
+
+  const handleTaskTitleClick = (task: Task) => {
+    setSelectedTask(task);
+    setShowNoteLinkModal(true);
+  };
+
+  const handleCloseNoteLinkModal = () => {
+    setShowNoteLinkModal(false);
+    setSelectedTask(null);
+  };
 
   // Separate active and completed tasks
   const activeTasks = tasks
@@ -184,6 +207,7 @@ function QueueCard({ queue, tasks, totalMinutes, inboxTasks, onAssignTask }: Que
               onComplete={() => completeTask(task.id)}
               onUncomplete={() => uncompleteTask(task.id)}
               onRemove={() => unassignTaskFromQueue(task.id, queue.id)}
+              onTitleClick={() => handleTaskTitleClick(task)}
             />
           ))}
         </div>
@@ -219,6 +243,7 @@ function QueueCard({ queue, tasks, totalMinutes, inboxTasks, onAssignTask }: Que
                     onComplete={() => completeTask(task.id)}
                     onUncomplete={() => uncompleteTask(task.id)}
                     onRemove={() => unassignTaskFromQueue(task.id, queue.id)}
+                    onTitleClick={() => handleTaskTitleClick(task)}
                   />
                 ))}
               </div>
@@ -236,6 +261,13 @@ function QueueCard({ queue, tasks, totalMinutes, inboxTasks, onAssignTask }: Que
           onSelect={onAssignTask}
         />
       )}
+
+      {/* Obsidian Note Link Modal */}
+      <ObsidianNoteLinkModal
+        isOpen={showNoteLinkModal}
+        task={selectedTask}
+        onClose={handleCloseNoteLinkModal}
+      />
     </>
   );
 }

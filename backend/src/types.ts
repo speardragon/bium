@@ -24,12 +24,15 @@ export interface Task {
   status: 'inbox' | 'assigned' | 'completed';
   assignedQueueId: string | null;  // 할당된 Queue ID
   completedAt: string | null;      // 완료 시각 (ISO string)
+  obsidianLink: string | null;     // Obsidian 노트 링크 (vault 내 상대 경로)
 }
 
 export type SupportedLanguage = 'ko' | 'en' | 'ja' | 'zh';
 
 export interface Settings {
   language: SupportedLanguage;
+  obsidianVaultPath: string | null;    // Obsidian vault 경로
+  obsidianDefaultFolder: string | null; // 새 노트 생성 시 기본 폴더
 }
 
 export interface Database {

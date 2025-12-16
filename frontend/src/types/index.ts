@@ -22,10 +22,13 @@ export interface Task {
   status: 'inbox' | 'assigned' | 'completed';
   assignedQueueId: string | null;
   completedAt: string | null;
+  obsidianLink: string | null;
 }
 
 export type SupportedLanguage = 'ko' | 'en' | 'ja' | 'zh';
 
 export interface Settings {
   language: SupportedLanguage;
+  obsidianVaultPath: string | null;
+  obsidianDefaultFolder: string | null;
 }

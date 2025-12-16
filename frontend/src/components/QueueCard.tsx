@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useState, useRef } from "react";
-import { Check, ChevronDown, ChevronUp, GripVertical, Pencil } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, GripVertical, Pencil, FileText } from "lucide-react";
 import { useDraggable } from "@dnd-kit/core";
 import { Queue, QueueTemplate, Task } from "../types";
 import {
@@ -12,6 +12,7 @@ import {
 } from "../utils";
 import { useStore } from "../store/useStore";
 import { QueueEditPopover } from "./QueueEditPopover";
+import { ObsidianNoteLinkModal } from "./ObsidianNoteLinkModal";
 
 interface QueueCardProps {
   queue: Queue;
@@ -31,6 +32,8 @@ export function QueueCard({ queue, template, tasks, isEditMode = false, isDraggi
   const { completeTask, uncompleteTask } = useStore();
   const [showCompleted, setShowCompleted] = useState(false);
   const [showEditPopover, setShowEditPopover] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [showNoteLinkModal, setShowNoteLinkModal] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
   // Draggable setup
@@ -80,6 +83,16 @@ export function QueueCard({ queue, template, tasks, isEditMode = false, isDraggi
   const handleEditClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowEditPopover(true);
+  };
+
+  const handleTaskTitleClick = (task: Task) => {
+    setSelectedTask(task);
+    setShowNoteLinkModal(true);
+  };
+
+  const handleCloseNoteLinkModal = () => {
+    setShowNoteLinkModal(false);
+    setSelectedTask(null);
   };
 
   // Edit Mode: Simplified card with drag handle
@@ -242,6 +255,7 @@ export function QueueCard({ queue, template, tasks, isEditMode = false, isDraggi
         {/* Active Tasks */}
         {activeTasks.map((task, index) => {
           const isOverflowing = index === activeTasks.length - 1 && isOverfilled;
+          const hasObsidianLink = !!task.obsidianLink;
           return (
             <div
               key={task.id}
@@ -269,7 +283,16 @@ export function QueueCard({ queue, template, tasks, isEditMode = false, isDraggi
                 >
                   {/* Empty checkbox */}
                 </button>
-                <span className="truncate flex-1">{task.title}</span>
+                <button
+                  onClick={() => handleTaskTitleClick(task)}
+                  className={`truncate flex-1 text-left hover:text-blue-600 transition-colors flex items-center gap-1 ${
+                    hasObsidianLink ? 'text-purple-700' : ''
+                  }`}
+                  title={hasObsidianLink ? task.obsidianLink! : t("obsidian.clickToLink", "Click to link to Obsidian note")}
+                >
+                  {hasObsidianLink && <FileText className="w-3 h-3 flex-shrink-0" />}
+                  <span className="truncate">{task.title}</span>
+                </button>
                 <span
                   className={`ml-1 px-1.5 py-0.5 rounded text-xs ${
                     isOverflowing ? "bg-red-200 text-red-700" : "bg-white/50"
@@ -300,26 +323,38 @@ export function QueueCard({ queue, template, tasks, isEditMode = false, isDraggi
             </button>
             {showCompleted && (
               <div className="space-y-1">
-                {completedTasks.map((task) => (
-                  <div
-                    key={task.id}
-                    className="px-2 py-1.5 rounded text-xs bg-gray-50 text-gray-400 border border-gray-100"
-                  >
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => handleToggleComplete(task)}
-                        className="w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center
-                                 bg-green-500 border-green-500 text-white"
-                      >
-                        <Check className="w-3 h-3" />
-                      </button>
-                      <span className="truncate flex-1 line-through">{task.title}</span>
-                      <span className="ml-1 px-1.5 py-0.5 rounded text-xs bg-gray-100">
-                        {formatDuration(task.durationMinutes)}
-                      </span>
+                {completedTasks.map((task) => {
+                  const hasObsidianLink = !!task.obsidianLink;
+                  return (
+                    <div
+                      key={task.id}
+                      className="px-2 py-1.5 rounded text-xs bg-gray-50 text-gray-400 border border-gray-100"
+                    >
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => handleToggleComplete(task)}
+                          className="w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center
+                                   bg-green-500 border-green-500 text-white"
+                        >
+                          <Check className="w-3 h-3" />
+                        </button>
+                        <button
+                          onClick={() => handleTaskTitleClick(task)}
+                          className={`truncate flex-1 text-left line-through hover:text-blue-400 transition-colors flex items-center gap-1 ${
+                            hasObsidianLink ? 'text-purple-400' : ''
+                          }`}
+                          title={hasObsidianLink ? task.obsidianLink! : t("obsidian.clickToLink", "Click to link to Obsidian note")}
+                        >
+                          {hasObsidianLink && <FileText className="w-3 h-3 flex-shrink-0" />}
+                          <span className="truncate">{task.title}</span>
+                        </button>
+                        <span className="ml-1 px-1.5 py-0.5 rounded text-xs bg-gray-100">
+                          {formatDuration(task.durationMinutes)}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
@@ -376,6 +411,13 @@ export function QueueCard({ queue, template, tasks, isEditMode = false, isDraggi
           {formatDuration(usedMinutes - totalMinutes)})
         </div>
       )}
+
+      {/* Obsidian Note Link Modal */}
+      <ObsidianNoteLinkModal
+        isOpen={showNoteLinkModal}
+        task={selectedTask}
+        onClose={handleCloseNoteLinkModal}
+      />
     </div>
   );
 }

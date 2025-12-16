@@ -108,6 +108,7 @@ const defaultData: Database = {
       status: "inbox",
       assignedQueueId: null,
       completedAt: null,
+      obsidianLink: null,
     },
     {
       id: "t_002",
@@ -116,6 +117,7 @@ const defaultData: Database = {
       status: "inbox",
       assignedQueueId: null,
       completedAt: null,
+      obsidianLink: null,
     },
     {
       id: "t_003",
@@ -124,6 +126,7 @@ const defaultData: Database = {
       status: "inbox",
       assignedQueueId: null,
       completedAt: null,
+      obsidianLink: null,
     },
     {
       id: "t_004",
@@ -132,6 +135,7 @@ const defaultData: Database = {
       status: "inbox",
       assignedQueueId: null,
       completedAt: null,
+      obsidianLink: null,
     },
     {
       id: "t_005",
@@ -140,10 +144,13 @@ const defaultData: Database = {
       status: "inbox",
       assignedQueueId: null,
       completedAt: null,
+      obsidianLink: null,
     },
   ],
   settings: {
     language: "en",
+    obsidianVaultPath: null,
+    obsidianDefaultFolder: null,
   },
 };
 
