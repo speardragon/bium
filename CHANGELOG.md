@@ -1,3 +1,10 @@
+# [0.4.0](https://github.com/speardragon/bium/compare/v0.3.0...v0.4.0) (2025-12-16)
+
+
+### Features
+
+* 옵시디언 딥링크 기능 추가 ([147f76e](https://github.com/speardragon/bium/commit/147f76ecf52f1dda903783ec81f25fff0049856b))
+
 # [0.3.0](https://github.com/speardragon/bium/compare/v0.2.0...v0.3.0) (2025-12-16)
 
 
