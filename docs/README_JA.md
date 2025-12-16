@@ -55,7 +55,30 @@ Bium では、あなたの一日は**空のキュー（Queue）**から始まり
 - [Docker](https://www.docker.com/get-started) & Docker Compose
 - または Node.js 18+
 
-### 方法 1：Docker Hub から直接実行（最も簡単）
+### 方法 1：実行スクリプトを使用（推奨）
+
+```bash
+# スクリプトをダウンロード
+curl -O https://raw.githubusercontent.com/speardragon/bium/main/bium
+chmod +x bium
+
+# 実行（自動的に最新バージョンをpull）
+./bium start
+
+# ブラウザでアクセス
+open http://localhost
+```
+
+スクリプトコマンド：
+| コマンド | 説明 |
+|----------|------|
+| `./bium start` | 最新イメージをpullして起動 |
+| `./bium stop` | 停止 |
+| `./bium restart` | 最新バージョンで再起動 |
+| `./bium status` | 状態確認 |
+| `./bium logs` | ログを表示 |
+
+### 方法 2：Docker Hub から直接実行
 
 ```bash
 # 1行で実行！
@@ -65,7 +88,7 @@ docker run -d -p 80:80 -v bium-data:/app/data --name bium speardragon/bium:lates
 open http://localhost
 ```
 
-### 方法 2：Docker Compose で実行
+### 方法 3：Docker Compose で実行
 
 ```bash
 # docker-compose.yml をダウンロード
@@ -78,7 +101,7 @@ docker-compose up -d
 open http://localhost
 ```
 
-### 方法 3：ソースからビルド
+### 方法 4：ソースからビルド
 
 ```bash
 # リポジトリをクローン
@@ -92,7 +115,7 @@ docker-compose up --build -d
 open http://localhost
 ```
 
-### 方法 4：ローカル開発環境
+### 方法 5：ローカル開発環境
 
 ```bash
 # リポジトリをクローン
@@ -128,10 +151,11 @@ docker-compose down
 ### アップデート
 
 ```bash
-# 最新イメージをpull
-docker pull speardragon/bium:latest
+# スクリプト使用時（自動的に最新バージョンを確認）
+./bium restart
 
-# コンテナを再起動
+# または手動で
+docker pull speardragon/bium:latest
 docker stop bium && docker rm bium
 docker run -d -p 80:80 -v bium-data:/app/data --name bium speardragon/bium:latest
 ```

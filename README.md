@@ -55,7 +55,30 @@
 - [Docker](https://www.docker.com/get-started) & Docker Compose
 - 또는 Node.js 18+
 
-### 방법 1: Docker Hub에서 바로 실행 (가장 쉬움)
+### 방법 1: 실행 스크립트 사용 (추천)
+
+```bash
+# 스크립트 다운로드
+curl -O https://raw.githubusercontent.com/speardragon/bium/main/bium
+chmod +x bium
+
+# 실행 (자동으로 최신 버전 pull)
+./bium start
+
+# 브라우저에서 접속
+open http://localhost
+```
+
+스크립트 명령어:
+| 명령어 | 설명 |
+|--------|------|
+| `./bium start` | 최신 이미지 pull 후 시작 |
+| `./bium stop` | 중지 |
+| `./bium restart` | 최신 버전으로 재시작 |
+| `./bium status` | 상태 확인 |
+| `./bium logs` | 로그 보기 |
+
+### 방법 2: Docker Hub에서 바로 실행
 
 ```bash
 # 한 줄로 바로 실행!
@@ -65,7 +88,7 @@ docker run -d -p 80:80 -v bium-data:/app/data --name bium speardragon/bium:lates
 open http://localhost
 ```
 
-### 방법 2: Docker Compose로 실행
+### 방법 3: Docker Compose로 실행
 
 ```bash
 # docker-compose.yml 파일 다운로드
@@ -78,7 +101,7 @@ docker-compose up -d
 open http://localhost
 ```
 
-### 방법 3: 소스에서 빌드
+### 방법 4: 소스에서 빌드
 
 ```bash
 # 저장소 클론
@@ -92,7 +115,7 @@ docker-compose up --build -d
 open http://localhost
 ```
 
-### 방법 4: 로컬 개발 환경
+### 방법 5: 로컬 개발 환경
 
 ```bash
 # 저장소 클론
@@ -128,10 +151,11 @@ docker-compose down
 ### 업데이트
 
 ```bash
-# 최신 이미지 pull
-docker pull speardragon/bium:latest
+# 스크립트 사용 시 (자동으로 최신 버전 확인 및 업데이트 알림)
+./bium restart
 
-# 컨테이너 재시작
+# 또는 수동으로
+docker pull speardragon/bium:latest
 docker stop bium && docker rm bium
 docker run -d -p 80:80 -v bium-data:/app/data --name bium speardragon/bium:latest
 ```

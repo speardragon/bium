@@ -55,7 +55,30 @@
 - [Docker](https://www.docker.com/get-started) & Docker Compose
 - 或 Node.js 18+
 
-### 方式 1：从 Docker Hub 直接运行（最简单）
+### 方式 1：使用运行脚本（推荐）
+
+```bash
+# 下载脚本
+curl -O https://raw.githubusercontent.com/speardragon/bium/main/bium
+chmod +x bium
+
+# 运行（自动拉取最新版本）
+./bium start
+
+# 在浏览器中访问
+open http://localhost
+```
+
+脚本命令：
+| 命令 | 描述 |
+|------|------|
+| `./bium start` | 拉取最新镜像并启动 |
+| `./bium stop` | 停止 |
+| `./bium restart` | 使用最新版本重启 |
+| `./bium status` | 检查状态 |
+| `./bium logs` | 查看日志 |
+
+### 方式 2：从 Docker Hub 直接运行
 
 ```bash
 # 一行命令即可运行！
@@ -65,7 +88,7 @@ docker run -d -p 80:80 -v bium-data:/app/data --name bium speardragon/bium:lates
 open http://localhost
 ```
 
-### 方式 2：使用 Docker Compose 运行
+### 方式 3：使用 Docker Compose 运行
 
 ```bash
 # 下载 docker-compose.yml
@@ -78,7 +101,7 @@ docker-compose up -d
 open http://localhost
 ```
 
-### 方式 3：从源码构建
+### 方式 4：从源码构建
 
 ```bash
 # 克隆仓库
@@ -92,7 +115,7 @@ docker-compose up --build -d
 open http://localhost
 ```
 
-### 方式 4：本地开发环境
+### 方式 5：本地开发环境
 
 ```bash
 # 克隆仓库
@@ -128,10 +151,11 @@ docker-compose down
 ### 更新
 
 ```bash
-# 拉取最新镜像
-docker pull speardragon/bium:latest
+# 使用脚本时（自动检查最新版本）
+./bium restart
 
-# 重启容器
+# 或手动更新
+docker pull speardragon/bium:latest
 docker stop bium && docker rm bium
 docker run -d -p 80:80 -v bium-data:/app/data --name bium speardragon/bium:latest
 ```

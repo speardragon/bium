@@ -55,7 +55,30 @@ This visual feedback intuitively shows that "time is limited," helping you make 
 - [Docker](https://www.docker.com/get-started) & Docker Compose
 - Or Node.js 18+
 
-### Option 1: Run from Docker Hub (Easiest)
+### Option 1: Using the Run Script (Recommended)
+
+```bash
+# Download the script
+curl -O https://raw.githubusercontent.com/speardragon/bium/main/bium
+chmod +x bium
+
+# Run (automatically pulls the latest version)
+./bium start
+
+# Open in browser
+open http://localhost
+```
+
+Script commands:
+| Command | Description |
+|---------|-------------|
+| `./bium start` | Pull latest image and start |
+| `./bium stop` | Stop |
+| `./bium restart` | Restart with latest version |
+| `./bium status` | Check status |
+| `./bium logs` | View logs |
+
+### Option 2: Run from Docker Hub
 
 ```bash
 # Run with a single command!
@@ -65,7 +88,7 @@ docker run -d -p 80:80 -v bium-data:/app/data --name bium speardragon/bium:lates
 open http://localhost
 ```
 
-### Option 2: Run with Docker Compose
+### Option 3: Run with Docker Compose
 
 ```bash
 # Download docker-compose.yml
@@ -78,7 +101,7 @@ docker-compose up -d
 open http://localhost
 ```
 
-### Option 3: Build from Source
+### Option 4: Build from Source
 
 ```bash
 # Clone repository
@@ -92,7 +115,7 @@ docker-compose up --build -d
 open http://localhost
 ```
 
-### Option 4: Local Development
+### Option 5: Local Development
 
 ```bash
 # Clone repository
@@ -128,10 +151,11 @@ docker-compose down
 ### Update
 
 ```bash
-# Pull latest image
-docker pull speardragon/bium:latest
+# When using the script (automatically checks for latest version)
+./bium restart
 
-# Restart container
+# Or manually
+docker pull speardragon/bium:latest
 docker stop bium && docker rm bium
 docker run -d -p 80:80 -v bium-data:/app/data --name bium speardragon/bium:latest
 ```
