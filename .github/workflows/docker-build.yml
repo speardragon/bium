@@ -5,6 +5,10 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Release"]
+    types:
+      - completed
 
 env:
   DOCKERHUB_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/bium
@@ -12,10 +16,30 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'push' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get latest tag
+        id: get_tag
+        run: |
+          git fetch --tags
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          echo "tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+          echo "Latest tag: $LATEST_TAG"
+
+      - name: Check if tag exists
+        if: steps.get_tag.outputs.tag == ''
+        run: |
+          echo "No tags found. Skipping build."
+          exit 1
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -35,9 +59,9 @@ jobs:
         with:
           images: ${{ env.DOCKERHUB_IMAGE }}
           tags: |
-            type=semver,pattern=v{{version}}
-            type=semver,pattern=v{{major}}.{{minor}}
-            type=semver,pattern=v{{major}}
+            type=semver,pattern=v{{version}},value=${{ steps.get_tag.outputs.tag }}
+            type=semver,pattern=v{{major}}.{{minor}},value=${{ steps.get_tag.outputs.tag }}
+            type=semver,pattern=v{{major}},value=${{ steps.get_tag.outputs.tag }}
             type=raw,value=latest
 
       - name: Build and push Docker image
